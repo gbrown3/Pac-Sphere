@@ -1,4 +1,4 @@
-#include "ExampleApp.h"
+#include "App.h"
 
 #define FONTSTASH_IMPLEMENTATION
 #include <fontstash.h>
@@ -15,7 +15,7 @@ using namespace basicgraphics;
 using namespace std;
 using namespace glm;
 
-ExampleApp::ExampleApp(int argc, char** argv) : VRApp(argc, argv)
+App::App(int argc, char** argv) : VRApp(argc, argv)
 {
 	_lastTime = 0.0;
     _curFrameTime = 0.0;
@@ -24,13 +24,13 @@ ExampleApp::ExampleApp(int argc, char** argv) : VRApp(argc, argv)
     sphereFrame = mat4(1.0);
 }
 
-ExampleApp::~ExampleApp()
+App::~App()
 {
 	glfonsDelete(fs);
 	shutdown();
 }
 
-void ExampleApp::onAnalogChange(const VRAnalogEvent &event) {
+void App::onAnalogChange(const VRAnalogEvent &event) {
     // This routine is called for all Analog_Change events.  Check event->getName()
     // to see exactly which analog input has been changed, and then access the
     // new value with event->getValue().
@@ -43,7 +43,7 @@ void ExampleApp::onAnalogChange(const VRAnalogEvent &event) {
 
 }
 
-void ExampleApp::onButtonDown(const VRButtonEvent &event) {
+void App::onButtonDown(const VRButtonEvent &event) {
     // This routine is called for all Button_Down events.  Check event->getName()
     // to see exactly which button has been pressed down.
 	
@@ -74,21 +74,21 @@ void ExampleApp::onButtonDown(const VRButtonEvent &event) {
 
 }
 
-void ExampleApp::onButtonUp(const VRButtonEvent &event) {
+void App::onButtonUp(const VRButtonEvent &event) {
     // This routine is called for all Button_Up events.  Check event->getName()
     // to see exactly which button has been released.
 
 	//std::cout << "ButtonUp: " << event.getName() << std::endl;
 }
 
-void ExampleApp::onCursorMove(const VRCursorEvent &event) {
+void App::onCursorMove(const VRCursorEvent &event) {
 	// This routine is called for all mouse move events. You can get the absolute position
 	// or the relative position within the window scaled 0--1.
 	
 	//std::cout << "MouseMove: "<< event.getName() << " " << event.getPos()[0] << " " << event.getPos()[1] << std::endl;
 }
 
-void ExampleApp::onTrackerMove(const VRTrackerEvent &event) {
+void App::onTrackerMove(const VRTrackerEvent &event) {
     // This routine is called for all Tracker_Move events.  Check event->getName()
     // to see exactly which tracker has moved, and then access the tracker's new
     // 4x4 transformation matrix with event->getTransform().
@@ -96,7 +96,7 @@ void ExampleApp::onTrackerMove(const VRTrackerEvent &event) {
 	// We will use trackers when we do a virtual reality assignment. For now, you can ignore this input type.
 }
 
-void ExampleApp::onRenderGraphicsContext(const VRGraphicsState &renderState) {
+void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
     // This routine is called once per graphics context at the start of the
     // rendering process.  So, this is the place to initialize textures,
     // load models, or do other operations that you only want to do once per
@@ -169,7 +169,7 @@ void ExampleApp::onRenderGraphicsContext(const VRGraphicsState &renderState) {
     
 }
 
-void ExampleApp::onRenderGraphicsScene(const VRGraphicsState &renderState) {
+void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     // This routine is called once per eye/camera.  This is the place to actually
     // draw the scene.
     
@@ -215,7 +215,7 @@ void ExampleApp::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     wheel->draw(_shader, translate(mat4(1.0), vec3(1, 1, 2)) * sphereFrame);
 }
 
-void ExampleApp::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {
+void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {
 	//float lh = 0;
 	//fonsVertMetrics(fs, NULL, NULL, &lh);
 	//double width = fonsTextBounds(fs, text.c_str(), NULL, NULL) + 40;
@@ -240,7 +240,7 @@ void ExampleApp::drawText(const std::string text, float xPos, float yPos, GLfloa
 
 }
 
-void ExampleApp::reloadShaders()
+void App::reloadShaders()
 {
 	_shader.compileShader("texture.vert", GLSLShader::VERTEX);
 	_shader.compileShader("texture.frag", GLSLShader::FRAGMENT);
@@ -248,7 +248,7 @@ void ExampleApp::reloadShaders()
 	_shader.use();
 }
 
-void ExampleApp::initializeText() {
+void App::initializeText() {
 	int fontNormal = FONS_INVALID;
 	fs = nullptr;
 

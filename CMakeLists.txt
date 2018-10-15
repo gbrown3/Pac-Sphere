@@ -35,12 +35,12 @@ message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
 
 set(source_files
   src/main.cpp
-  src/ExampleApp.cpp
+  src/App.cpp
   src/GroundPlane.cpp
 )
 
 set(header_files
-  src/ExampleApp.h
+  src/App.h
   src/GroundPlane.h
 )
 
