@@ -135,7 +135,6 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		initializeText();
         
         sphere.reset(new Sphere(vec3(0.0), 1, vec4(1,0,0,1)));
-        ground.reset(new GroundPlane(vec3(0, -1, 0), vec3(0, 1, 0)));
     }
     
     //TODO: Update the sphereFrame matrix to move the ball's position based on the dir variable.
@@ -195,9 +194,6 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	_shader.setUniform("model_mat", model);
 	_shader.setUniform("normal_mat", mat3(transpose(inverse(model))));
 	_shader.setUniform("eye_world", eye_world);
-
-
-    ground->draw(_shader, model);
     
     _shader.setUniform("model_mat", sphereFrame);
     _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));

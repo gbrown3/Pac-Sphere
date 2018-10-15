@@ -60,7 +60,6 @@ private:
 	double _curFrameTime;
     
     std::unique_ptr<basicgraphics::Sphere> sphere;
-    std::unique_ptr<basicgraphics::GroundPlane> ground;
     
     glm::vec3 dir;
     glm::mat4 sphereFrame;
@@ -72,17 +71,6 @@ private:
 	void drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth);
 	struct FONScontext* fs;
     basicgraphics::GLSLProgram _textShader;
-    
-    
-    // Scene practice
-    
-    std::unique_ptr<basicgraphics::Box> carBody;
-    std::unique_ptr<basicgraphics::Cylinder> wheel;
-    
-    
-    
-    
-    
 };
 
 
