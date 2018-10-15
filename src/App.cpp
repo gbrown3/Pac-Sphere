@@ -136,9 +136,6 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         
         sphere.reset(new Sphere(vec3(0.0), 1, vec4(1,0,0,1)));
         ground.reset(new GroundPlane(vec3(0, -1, 0), vec3(0, 1, 0)));
-
-        carBody.reset(new Box(vec3(-1, 1, 0), vec3(1, 2, 3), vec4(1, 0, 0, 1)));
-        wheel.reset(new Cylinder(vec3(0, 0, 0), vec3(0.25, 0, 0), 0.75, vec4(0, 0, 0, 1)));
     }
     
     //TODO: Update the sphereFrame matrix to move the ball's position based on the dir variable.
@@ -178,7 +175,7 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 
 	// Setup the view matrix to set where the camera is located in the scene
     vec3 ballPos = vec3(column(sphereFrame, 3));
-    glm::vec3 eye_world = ballPos + glm::vec3(4,1.5,8);
+    glm::vec3 eye_world = ballPos + glm::vec3(0,1.5,8);
     glm::mat4 view = glm::lookAt(eye_world, ballPos, glm::vec3(0,1,0));
 
 	// Setup the projection matrix so that things are rendered in perspective
@@ -204,15 +201,8 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     
     _shader.setUniform("model_mat", sphereFrame);
     _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
-    //sphere->draw(_shader, sphereFrame);
     
-    
-    carBody->draw(_shader, sphereFrame);
-    
-    wheel->draw(_shader, translate(mat4(1.0), vec3(1, 1, 1)) * sphereFrame);
-    wheel->draw(_shader, translate(mat4(1.0), vec3(-1, 1, 1)) * sphereFrame);
-    wheel->draw(_shader, translate(mat4(1.0), vec3(-1, 1, 2)) * sphereFrame);
-    wheel->draw(_shader, translate(mat4(1.0), vec3(1, 1, 2)) * sphereFrame);
+    sphere->draw(_shader, sphereFrame);
 }
 
 void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {
