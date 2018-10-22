@@ -138,23 +138,9 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
     }
     
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
-    vec3 currentPos = column(sphereFrame, 3);
     
-    // first move to origin, then rotate, then move back to proper position
-    
-    if (rotationAxis == vec3(0, 0, 0)) {
-        sphereFrame = translate(mat4(1.0), dir) * sphereFrame;
-    }
-    else {
-        sphereFrame =
-        
-        translate(mat4(1.0), dir + currentPos) *
-        
-        rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) *
-        
-        translate(mat4(1.0), -currentPos) *
-        
-        sphereFrame;
+    if (rotationAxis != vec3(0, 0, 0)) {
+        sphereFrame = rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) * sphereFrame;
     }
     
 }
