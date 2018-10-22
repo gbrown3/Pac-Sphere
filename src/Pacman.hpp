@@ -9,5 +9,19 @@
 #define Pacman_hpp
 
 #include <stdio.h>
+#include <BasicGraphics.h>
+
+class Pacman {
+public:
+    Pacman(float mazeRadius);
+    //virtual ~Pacman();
+    
+private:
+    
+    static constexpr float PAC_RADIUS = 1.0f;
+    
+    // TODO: swap this out with sphere mesh similar to earth once hw3 is done
+    std::unique_ptr<basicgraphics::Sphere> _mesh;
+};
 
 #endif /* Pacman_hpp */

@@ -30,6 +30,7 @@ using namespace MinVR;
 #endif
 
 #include <BasicGraphics.h>
+#include "Pacman.hpp"
 
 
 class App : public VRApp {
@@ -57,11 +58,14 @@ public:
     virtual void onRenderGraphicsContext(const VRGraphicsState& state);
     
 private:
+    
+    static constexpr float MAZE_RADIUS = 20;
 
 	double _lastTime;
 	double _curFrameTime;
     
-    std::unique_ptr<basicgraphics::Sphere> sphere;
+    std::unique_ptr<basicgraphics::Sphere> maze;
+    std::unique_ptr<Pacman> pacman;
     
     glm::vec3 dir;
     glm::mat4 sphereFrame;
