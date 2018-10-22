@@ -52,16 +52,16 @@ void App::onButtonDown(const VRButtonEvent &event) {
     string name = event.getName();
     
     if (name == "KbdUp_Down") {
-        dir = vec3(0,0,MOVEMENT_SPEED);
+        dir = vec3(0,-MOVEMENT_SPEED,0);
     }
     else if (name == "KbdDown_Down") {
-        dir = vec3(0,0,-MOVEMENT_SPEED);
+        dir = vec3(0,MOVEMENT_SPEED,0);
     }
     else if (name == "KbdLeft_Down") {
-        dir = vec3(-MOVEMENT_SPEED,0,0);
+        dir = vec3(MOVEMENT_SPEED,0,0);
     }
     else if (name == "KbdRight_Down") {
-        dir = vec3(MOVEMENT_SPEED,0,0);
+        dir = vec3(-MOVEMENT_SPEED,0,0);
     }
     
     // If the ball rolls off the screen, you can press SPACEBAR to reset its position
@@ -133,16 +133,10 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 
 		initializeText();
         
-        sphere.reset(new Sphere(vec3(0.0), 1, vec4(1,0,0,1)));
+        sphere.reset(new Sphere(vec3(0.0), 20, vec4(1,0,0,1)));
     }
     
-    //TODO: Update the sphereFrame matrix to move the ball's position based on the dir variable.
-    //Make the ball rotate so that it looks like it is rolling on the table.
-    
-    // Uncomment bottom line for earthquake simulator
-    //sphereFrame = sphereFrame * translate(mat4(1.0), dir) * rotate(mat4(1.0), radians(45.0f), vec3(0, 0, 1));
-    
-    vec3 rotationAxis = cross(dir, vec3(0, 1, 0));
+    vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
     vec3 currentPos = column(sphereFrame, 3);
     
     // first move to origin, then rotate, then move back to proper position
@@ -155,7 +149,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         
         translate(mat4(1.0), dir + currentPos) *
         
-        rotate(mat4(1.0), radians(-0.5f) * dir.length(), rotationAxis) *
+        rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) *
         
         translate(mat4(1.0), -currentPos) *
         
@@ -173,7 +167,7 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 
 	// Setup the view matrix to set where the camera is located in the scene
     vec3 ballPos = vec3(column(sphereFrame, 3));
-    glm::vec3 eye_world = ballPos + glm::vec3(0,1.5,8);
+    glm::vec3 eye_world = ballPos + glm::vec3(0,0,60);
     glm::mat4 view = glm::lookAt(eye_world, ballPos, glm::vec3(0,1,0));
 
 	// Setup the projection matrix so that things are rendered in perspective

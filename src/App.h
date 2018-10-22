@@ -41,7 +41,7 @@ public:
     virtual ~App();
     
     
-    static constexpr float MOVEMENT_SPEED = 0.01;
+    static constexpr float MOVEMENT_SPEED = 0.1;
 
     
     /** USER INTERFACE CALLBACKS **/
