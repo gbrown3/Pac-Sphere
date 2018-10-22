@@ -40,6 +40,9 @@ public:
      */
 	App(int argc, char** argv);
     virtual ~App();
+    
+    
+    static constexpr float MOVEMENT_SPEED = 0.01;
 
     
     /** USER INTERFACE CALLBACKS **/

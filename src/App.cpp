@@ -50,19 +50,18 @@ void App::onButtonDown(const VRButtonEvent &event) {
 	std::cout << "ButtonDown: " << event.getName() << std::endl;
     
     string name = event.getName();
-    float speed = 0.01;
     
     if (name == "KbdUp_Down") {
-        dir = dir + vec3(0,0,-speed);
+        dir = vec3(0,0,MOVEMENT_SPEED);
     }
     else if (name == "KbdDown_Down") {
-        dir = dir + vec3(0,0,speed);
+        dir = vec3(0,0,-MOVEMENT_SPEED);
     }
     else if (name == "KbdLeft_Down") {
-        dir = dir + vec3(-speed,0,0);
+        dir = vec3(-MOVEMENT_SPEED,0,0);
     }
     else if (name == "KbdRight_Down") {
-        dir = dir + vec3(speed,0,0);
+        dir = vec3(MOVEMENT_SPEED,0,0);
     }
     
     // If the ball rolls off the screen, you can press SPACEBAR to reset its position
