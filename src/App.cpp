@@ -21,7 +21,7 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     _curFrameTime = 0.0;
     
     dir = vec3(0.0);
-    sphereFrame = mat4(1.0);
+    mazeFrame = mat4(1.0);
 }
 
 App::~App()
@@ -52,22 +52,22 @@ void App::onButtonDown(const VRButtonEvent &event) {
     string name = event.getName();
     
     if (name == "KbdUp_Down") {
-        dir = vec3(0,-MOVEMENT_SPEED,0);
-    }
-    else if (name == "KbdDown_Down") {
         dir = vec3(0,MOVEMENT_SPEED,0);
     }
+    else if (name == "KbdDown_Down") {
+        dir = vec3(0,-MOVEMENT_SPEED,0);
+    }
     else if (name == "KbdLeft_Down") {
-        dir = vec3(MOVEMENT_SPEED,0,0);
+        dir = vec3(-MOVEMENT_SPEED,0,0);
     }
     else if (name == "KbdRight_Down") {
-        dir = vec3(-MOVEMENT_SPEED,0,0);
+        dir = vec3(MOVEMENT_SPEED,0,0);
     }
     
     // If the ball rolls off the screen, you can press SPACEBAR to reset its position
     else if (name == "KbdSpace_Down") {
         dir = vec3(0,0,0);
-        sphereFrame = mat4(1.0);
+        mazeFrame = mat4(1.0);
     }
 
 
@@ -140,7 +140,8 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
     
     if (rotationAxis != vec3(0, 0, 0)) {
-        sphereFrame = rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) * sphereFrame;
+        //mazeFrame = rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) * mazeFrame;
+        pacFrame = rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) * pacFrame;
     }
     
 }
@@ -153,9 +154,14 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// Setup the view matrix to set where the camera is located in the scene
-    vec3 ballPos = vec3(column(sphereFrame, 3));
-    glm::vec3 eye_world = ballPos + glm::vec3(0,0,60);
-    glm::mat4 view = glm::lookAt(eye_world, ballPos, glm::vec3(0,1,0));
+    vec3 pacPos = vec3(column(pacFrame, 3));
+    vec3 mazePos = vec3(column(pacFrame, 3));
+    
+    glm::vec3 eye_world = pacPos + glm::vec3(0,0,60 - Pacman::PAC_RADIUS*2);
+    //glm::vec3 eye_world = normalize(pacPos - mazePos) * 60.0f;
+    //glm::vec3 eye_world = (pacPos - mazePos) * 2.0f;
+    
+    glm::mat4 view = glm::lookAt(eye_world, pacPos, glm::vec3(0,1,0));
 
 	// Setup the projection matrix so that things are rendered in perspective
 	GLfloat windowHeight = renderState.index().getValue("WindowHeight");
@@ -175,11 +181,11 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	_shader.setUniform("normal_mat", mat3(transpose(inverse(model))));
 	_shader.setUniform("eye_world", eye_world);
     
-    _shader.setUniform("model_mat", sphereFrame);
-    _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
+    _shader.setUniform("model_mat", mazeFrame);
+    _shader.setUniform("normal_mat", mat3(transpose(inverse(mazeFrame))));
     
-    maze->draw(_shader, sphereFrame);
-    pacman->_mesh->draw(_shader, model);
+    maze->draw(_shader, mazeFrame);
+    pacman->_mesh->draw(_shader, pacFrame);
 }
 
 void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {

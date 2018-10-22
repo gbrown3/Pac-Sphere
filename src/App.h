@@ -67,8 +67,10 @@ private:
     std::unique_ptr<basicgraphics::Sphere> maze;
     std::unique_ptr<Pacman> pacman;
     
+    glm::mat4 mazeFrame;
+    glm::mat4 pacFrame;
+    
     glm::vec3 dir;
-    glm::mat4 sphereFrame;
     
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
