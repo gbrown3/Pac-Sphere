@@ -15,6 +15,8 @@ using namespace basicgraphics;
 using namespace std;
 using namespace glm;
 
+vec3 cameraUp;
+
 App::App(int argc, char** argv) : VRApp(argc, argv)
 {
 	_lastTime = 0.0;
@@ -22,6 +24,8 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     
     dir = vec3(0.0);
     mazeFrame = mat4(1.0);
+    pacFrame = translate(mat4(1.0), vec3(0, 0, MAZE_RADIUS + Pacman::PAC_RADIUS));
+    cameraUp = vec3(0, 1, 0);
 }
 
 App::~App()
@@ -140,8 +144,9 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
     
     if (rotationAxis != vec3(0, 0, 0)) {
-        //mazeFrame = rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) * mazeFrame;
-        pacFrame = rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) * pacFrame;
+        mat4 rotation = rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis);
+        pacFrame = rotation * pacFrame;
+        cameraUp = vec3(rotation * vec4(cameraUp, 1));
     }
     
 }
@@ -155,13 +160,15 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 
 	// Setup the view matrix to set where the camera is located in the scene
     vec3 pacPos = vec3(column(pacFrame, 3));
-    vec3 mazePos = vec3(column(pacFrame, 3));
+    vec3 mazePos = vec3(column(mazeFrame, 3));
     
-    glm::vec3 eye_world = pacPos + glm::vec3(0,0,60 - Pacman::PAC_RADIUS*2);
-    //glm::vec3 eye_world = normalize(pacPos - mazePos) * 60.0f;
-    //glm::vec3 eye_world = (pacPos - mazePos) * 2.0f;
+    glm::vec3 eye_world = normalize(pacPos - mazePos) * 60.0f;
     
-    glm::mat4 view = glm::lookAt(eye_world, pacPos, glm::vec3(0,1,0));
+//    cout << "Pacpos: " << to_string(pacPos) << endl << "mazePos: " << to_string(mazePos) <<
+//    endl << "eyeworld: " << to_string(eye_world);
+    
+    //glm::mat4 view = glm::lookAt(eye_world, pacPos, glm::vec3(0,1,0));
+    glm::mat4 view = glm::lookAt(eye_world, pacPos, cameraUp);
 
 	// Setup the projection matrix so that things are rendered in perspective
 	GLfloat windowHeight = renderState.index().getValue("WindowHeight");
