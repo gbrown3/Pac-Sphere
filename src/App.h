@@ -30,7 +30,6 @@ using namespace MinVR;
 #endif
 
 #include <BasicGraphics.h>
-#include "GroundPlane.h"
 
 
 class App : public VRApp {

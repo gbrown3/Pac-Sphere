@@ -41,7 +41,7 @@ set(source_files
 
 set(header_files
   src/App.h
-  src/Pacman.h
+  src/Pacman.hpp
 )
 
 set(extra_files
