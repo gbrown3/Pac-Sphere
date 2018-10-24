@@ -22,6 +22,9 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     
     dir = vec3(0.0);
     sphereFrame = mat4(1.0);
+    
+    mazeY = vec3(0, 1, 0);
+    dirXFlipped = false;
 }
 
 App::~App()
@@ -59,9 +62,11 @@ void App::onButtonDown(const VRButtonEvent &event) {
     }
     else if (name == "KbdLeft_Down") {
         dir = vec3(MOVEMENT_SPEED,0,0);
+        dirXFlipped = false;
     }
     else if (name == "KbdRight_Down") {
         dir = vec3(-MOVEMENT_SPEED,0,0);
+        dirXFlipped = false;
     }
     
     // If the ball rolls off the screen, you can press SPACEBAR to reset its position
@@ -140,7 +145,29 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
     
     if (rotationAxis != vec3(0, 0, 0)) {
-        sphereFrame = rotate(mat4(1.0), radians(-0.25f) * dir.length(), rotationAxis) * sphereFrame;
+        
+        float rotationAngle = radians(-0.25f);
+        
+        if (abs(dir.x) > 0) {
+            if (dir.x > 0) {
+                rotationAxis = -mazeY;
+                //rotationAngle = -rotationAngle;
+            }
+            else {
+                rotationAxis = mazeY;
+                //rotationAngle = -rotationAngle;
+            }
+        }
+        
+        if (mazeY.y < 0 && !dirXFlipped && dir.x != 0) {
+            dir.x = -dir.x;
+            dirXFlipped = true;
+        }
+        
+        mat4 rotation = rotate(mat4(1.0), rotationAngle * dir.length(), rotationAxis);
+        sphereFrame = rotation * sphereFrame;
+        mazeY = vec3(rotation * vec4(mazeY, 0));
+        
     }
     
 }

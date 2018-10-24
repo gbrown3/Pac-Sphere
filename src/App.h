@@ -70,6 +70,9 @@ private:
     glm::vec3 dir;
     glm::mat4 sphereFrame;
     
+    vec3 mazeY;
+    bool dirXFlipped;
+    
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
 
