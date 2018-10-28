@@ -37,11 +37,13 @@ set(source_files
   src/main.cpp
   src/App.cpp
   src/Pacman.cpp
+  src/Ghost.cpp
 )
 
 set(header_files
   src/App.h
   src/Pacman.hpp
+  src/Ghost.hpp
 )
 
 set(extra_files
