@@ -137,9 +137,9 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		reloadShaders();
 
 		initializeText();
-        
-        maze.reset(new Sphere(vec3(0.0), MAZE_RADIUS, vec4(1,0,0,1)));
-        pacman.reset(new Pacman(MAZE_RADIUS));
+
+		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), Texture::create2DTextureFromFile("../resources/felt.png")));
+        pacman.reset(new pacsphere::Sphere(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), PAC_RADIUS, vec4(1,1,0,1)));
     }
     
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
@@ -206,7 +206,7 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
     
     maze->draw(_shader, sphereFrame);
-    pacman->_mesh->draw(_shader, model);
+    pacman->draw(_shader, model);
 }
 
 void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {
