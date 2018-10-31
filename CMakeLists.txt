@@ -38,15 +38,18 @@ set(source_files
   src/App.cpp
   src/Pacman.cpp
   src/Sphere.cpp
+  src/Ghost.cpp
 )
 
 set(header_files
   src/App.h
   src/Pacman.h
-  src/Sphere.h)
+  src/Sphere.h
+  src/Ghost.h)
 
 set(extra_files
-  README.md)
+  README.md
+)
 
 set_source_files_properties(${extra_files} PROPERTIES HEADER_FILE_ONLY TRUE)
 
