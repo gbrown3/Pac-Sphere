@@ -5,7 +5,7 @@
 //  Created by Gabriel Brown on 10/28/18.
 //
 
-#include "Ghost.hpp"
+#include "Ghost.h"
 
 Ghost::Ghost(const glm::vec3 &position, Ghost_Type ghost) : _position(position){
     

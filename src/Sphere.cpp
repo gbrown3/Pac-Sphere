@@ -70,8 +70,6 @@ namespace pacsphere {
         _mesh.reset(new Mesh(textures, GL_TRIANGLE_STRIP, GL_STATIC_DRAW,
                              cpuVertexByteSize, cpuIndexByteSize, 0, cpuVertexArray,
                              cpuIndexArray.size(), cpuIndexByteSize, &cpuIndexArray[0]));
-
-
     }
 
     void Sphere::draw(GLSLProgram &shader, const glm::mat4 &modelMatrix) {

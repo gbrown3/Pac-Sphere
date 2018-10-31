@@ -137,8 +137,8 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		reloadShaders();
 
 		initializeText();
-
-		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), Texture::create2DTextureFromFile("../resources/felt.png")));
+		shared_ptr<Texture> tex2 = Texture::create2DTextureFromFile("../resources/pacman_maze2.jpeg");
+		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
         pacman.reset(new pacsphere::Sphere(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), PAC_RADIUS, vec4(1,1,0,1)));
     }
     
