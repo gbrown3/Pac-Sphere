@@ -32,6 +32,7 @@ using namespace MinVR;
 #include <BasicGraphics.h>
 #include "Pacman.h"
 #include "Sphere.h"
+#include "Config.h"
 
 
 class App : public VRApp {

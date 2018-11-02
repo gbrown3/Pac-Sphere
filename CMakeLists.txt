@@ -45,7 +45,9 @@ set(header_files
   src/App.h
   src/Pacman.h
   src/Sphere.h
-  src/Ghost.h)
+  src/Ghost.h
+  src/Config.h
+)
 
 set(extra_files
   README.md
