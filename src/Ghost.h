@@ -18,8 +18,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 // Strongly based on various objects in BasicGraphics, with some slight modifications to suit our needs
-class Ghost {
-public:
+namespace pacsphere {
     
     enum Ghost_Type {
         INKY,
@@ -28,22 +27,27 @@ public:
         CLYDE
     };
     
-    /*!
-     * Create ghost of a particular type centered at the specified position
-     */
-    Ghost(const glm::vec3 &position, Ghost_Type ghost);
-    //virtual ~Ghost();
+    class Ghost {
+        
+    public:
+        
+        /*!
+         * Create ghost of a particular type centered at the specified position
+         */
+        Ghost(const glm::vec3 &position, Ghost_Type ghost);
+        //virtual ~Ghost();
+        
+        virtual void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
+        
+    private:
+        
+        std::shared_ptr<basicgraphics::Model> _model;
+        
+        std::shared_ptr<basicgraphics::Model> getModelInstance(string fileName);
+        
+        const glm::vec3 _position;
+    };
     
-    virtual void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
-    
-private:
-    
-    std::shared_ptr<basicgraphics::Model> _model;
-    
-    std::shared_ptr<basicgraphics::Model> getModelInstance(string fileName);
-    
-    const glm::vec3 _position;
-};
-
+}
 
 #endif /* Ghost_hpp */

@@ -139,7 +139,10 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		initializeText();
 		shared_ptr<Texture> tex2 = Texture::create2DTextureFromFile(MAZE_TEXTURE_PATH);
 		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
+        
         pacman.reset(new pacsphere::Sphere(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), PAC_RADIUS, vec4(1,1,0,1)));
+        
+        pinky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::PINKY));
     }
     
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
@@ -206,7 +209,8 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
     
     maze->draw(_shader, sphereFrame);
-    pacman->draw(_shader, model);
+    //pacman->draw(_shader, model); 
+    pinky->draw(_shader, model);
 }
 
 void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {

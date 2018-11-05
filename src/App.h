@@ -32,6 +32,7 @@ using namespace MinVR;
 #include <BasicGraphics.h>
 #include "Pacman.h"
 #include "Sphere.h"
+#include "Ghost.h"
 #include "Config.h"
 
 
@@ -69,6 +70,7 @@ private:
     
     std::unique_ptr<pacsphere::Sphere> maze;
     std::unique_ptr<pacsphere::Sphere> pacman;
+    std::unique_ptr<pacsphere::Ghost> pinky;
     
     glm::vec3 dir;
     glm::mat4 sphereFrame;
