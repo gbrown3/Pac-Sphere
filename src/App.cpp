@@ -214,10 +214,10 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     maze->draw(_shader, sphereFrame);
     //pacman->draw(_shader, model);
     
-    inky->draw(_shader, model);
-    //pinky->draw(_shader, model);
-    //blinky->draw(_shader, model);
-    //clyde->draw(_shader, model);
+    //inky->draw(_ghostShader, model);
+    pinky->draw(_ghostShader, model);
+    //blinky->draw(_ghostShader, model);
+    //clyde->draw(_ghostShader, model);
 }
 
 void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {
@@ -251,6 +251,11 @@ void App::reloadShaders()
 	_shader.compileShader("texture.frag", GLSLShader::FRAGMENT);
 	_shader.link();
 	_shader.use();
+    
+    _ghostShader.compileShader("texture.vert", GLSLShader::VERTEX);
+    _ghostShader.compileShader("shaders/ghost.frag", GLSLShader::FRAGMENT);
+    _ghostShader.link();
+    _ghostShader.use();
 }
 
 void App::initializeText() {

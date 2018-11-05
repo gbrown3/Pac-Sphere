@@ -83,6 +83,7 @@ private:
     
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
+    basicgraphics::GLSLProgram _ghostShader;
 
 	void initializeText();
 	void drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth);
