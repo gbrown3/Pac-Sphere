@@ -16,19 +16,26 @@ namespace pacsphere {
         
         switch (ghost) {
             case INKY:
-                filePath += "inky";
+                //filePath += "inky";
+                filePath += "pinky";
+                _ghostColor = vec4(0.1, 1, 1, 1);   //cyan
                 break;
                 
             case PINKY:
                 filePath += "pinky";
+                _ghostColor = vec4(1, 0.5, 1, 1);   //pink
                 break;
                 
             case BLINKY:
-                filePath += "blinky";
+                //filePath += "blinky";
+                filePath += "pinky";
+                _ghostColor = vec4(1, 0, 0, 1); //red
                 break;
                 
             case CLYDE:
-                filePath += "clyde";
+                //filePath += "clyde";
+                filePath += "pinky";
+                _ghostColor = vec4(1, 0.5, 0, 1);   //orange
                 break;
                 
             default:
@@ -47,6 +54,8 @@ namespace pacsphere {
     }
 
     void Ghost::draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix) {
+        
+        _model->setMaterialColor(_ghostColor);
         
         glm::mat4 translate = glm::translate(glm::mat4(1.0), _position);
         // NOTE: scale matrix could also be included. Look at Sphere.cpp for example. May need to do this once proper size is determined

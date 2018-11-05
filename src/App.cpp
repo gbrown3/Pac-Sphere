@@ -136,13 +136,16 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		// This load shaders from disk, we do it once when the program starts up.
 		reloadShaders();
 
-		initializeText();
+		//initializeText();
 		shared_ptr<Texture> tex2 = Texture::create2DTextureFromFile(MAZE_TEXTURE_PATH);
 		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
         
         pacman.reset(new pacsphere::Sphere(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), PAC_RADIUS, vec4(1,1,0,1)));
         
+        inky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::INKY));
         pinky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::PINKY));
+        blinky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::BLINKY));
+        clyde.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::CLYDE));
     }
     
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
@@ -209,8 +212,12 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
     
     maze->draw(_shader, sphereFrame);
-    //pacman->draw(_shader, model); 
-    pinky->draw(_shader, model);
+    //pacman->draw(_shader, model);
+    
+    inky->draw(_shader, model);
+    //pinky->draw(_shader, model);
+    //blinky->draw(_shader, model);
+    //clyde->draw(_shader, model);
 }
 
 void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {

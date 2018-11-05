@@ -46,6 +46,8 @@ namespace pacsphere {
         std::shared_ptr<basicgraphics::Model> getModelInstance(string fileName);
         
         const glm::vec3 _position;
+        
+        glm::vec4 _ghostColor;
     };
     
 }
