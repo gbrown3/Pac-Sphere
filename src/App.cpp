@@ -188,8 +188,8 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     glm::mat4 view = glm::lookAt(eye_world, ballPos, glm::vec3(0,1,0));
 
 	// Setup the projection matrix so that things are rendered in perspective
-	GLfloat windowHeight = renderState.index().getValue("WindowHeight");
-	GLfloat windowWidth = renderState.index().getValue("WindowWidth");
+	GLfloat windowHeight = renderState.index().getValue("FramebufferHeight");
+	GLfloat windowWidth = renderState.index().getValue("FramebufferWidth");
 	glm::mat4 projection = glm::perspective(glm::radians(45.0f), windowWidth / windowHeight, 0.01f, 100.0f);
 	
 	// Setup the model matrix

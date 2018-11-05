@@ -17,10 +17,10 @@
 //const std:string DATA_DIR = "C:\\Users\\bjackson\\Documents\\classes\\comp494-graphics\\assignments\\asgn3-Earthquake\\data\\";
 
 // MAC path
-//const std::string DATA_DIR = "/Users/Gabe/CPP_Projects/Graphics_COMP456/Pac-Sphere/resources/";
+const std::string DATA_DIR = "/Users/Gabe/CPP_Projects/Graphics_COMP456/Pac-Sphere/resources/";
 
 // Alt mac path
-const std::string DATA_DIR = "/Users/gabe/CPP_Projects/Classes/Graphics465/Pac-Sphere/resources/";
+//const std::string DATA_DIR = "/Users/gabe/CPP_Projects/Classes/Graphics465/Pac-Sphere/resources/";
 
 // LINUX path
 //const std::string DATA_DIR = "../resources/pacman_maze2.jpeg";
