@@ -17,7 +17,6 @@
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-// Strongly based on various objects in BasicGraphics, with some slight modifications to suit our needs
 namespace pacsphere {
     
     enum Ghost_Type {
@@ -27,6 +26,10 @@ namespace pacsphere {
         CLYDE
     };
     
+    /**
+     * Loads the .obj model of a ghost and sets its color based on which ghost it's supposed to represent.
+     * Strongly based on various objects in BasicGraphics, with some slight modifications to suit our needs.
+     */
     class Ghost {
         
     public:

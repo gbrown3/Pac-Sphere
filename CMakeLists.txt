@@ -39,6 +39,7 @@ set(source_files
   src/Pacman.cpp
   src/Sphere.cpp
   src/Ghost.cpp
+  src/Bone.cpp
 )
 
 set(header_files
@@ -47,6 +48,7 @@ set(header_files
   src/Sphere.h
   src/Ghost.h
   src/Config.h
+  src/Bone.h
 )
 
 set(extra_files
