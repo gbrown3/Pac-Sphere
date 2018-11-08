@@ -214,8 +214,8 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     maze->draw(_shader, sphereFrame);
     //pacman->draw(_shader, model);
     
-    //inky->draw(_ghostShader, model);
-    pinky->draw(_ghostShader, model);
+    inky->draw(_ghostShader, model);
+    //pinky->draw(_ghostShader, model);
     //blinky->draw(_ghostShader, model);
     //clyde->draw(_ghostShader, model);
 }

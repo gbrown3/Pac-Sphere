@@ -12,29 +12,26 @@ namespace pacsphere {
     
     Ghost::Ghost(const glm::vec3 &position, Ghost_Type ghost) : _position(position){
         
-        string filePath = DATA_DIR;
+        string filePath = DATA_DIR + "ghost";
         
         switch (ghost) {
             case INKY:
                 //filePath += "inky";
-                filePath += "pinky";
                 _ghostColor = vec4(0.1, 1, 1, 1);   //cyan
                 break;
                 
             case PINKY:
-                filePath += "pinky";
+                //filePath += "pinky";
                 _ghostColor = vec4(1, 0.5, 1, 1);   //pink
                 break;
                 
             case BLINKY:
                 //filePath += "blinky";
-                filePath += "pinky";
                 _ghostColor = vec4(1, 0, 0, 1); //red
                 break;
                 
             case CLYDE:
                 //filePath += "clyde";
-                filePath += "pinky";
                 _ghostColor = vec4(1, 0.5, 0, 1);   //orange
                 break;
                 
