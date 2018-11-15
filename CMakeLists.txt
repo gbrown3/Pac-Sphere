@@ -40,6 +40,7 @@ set(source_files
   src/Sphere.cpp
   src/Ghost.cpp
   src/Bone.cpp
+  src/Joint.cpp
 )
 
 set(header_files
@@ -49,6 +50,7 @@ set(header_files
   src/Ghost.h
   src/Config.h
   src/Bone.h
+  src/Joint.h
 )
 
 set(extra_files
