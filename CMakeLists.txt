@@ -39,7 +39,6 @@ set(source_files
   src/Pacman.cpp
   src/Sphere.cpp
   src/Ghost.cpp
-  src/Bone.cpp
   src/Joint.cpp
 )
 
@@ -49,7 +48,6 @@ set(header_files
   src/Sphere.h
   src/Ghost.h
   src/Config.h
-  src/Bone.h
   src/Joint.h
 )
 
