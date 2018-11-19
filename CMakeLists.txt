@@ -41,6 +41,7 @@ set(source_files
   src/Ghost.cpp
   src/Joint.cpp
   src/AnimatedMesh.cpp
+  src/AnimatedModel.cpp
 )
 
 set(header_files
@@ -51,6 +52,7 @@ set(header_files
   src/Config.h
   src/Joint.h
   src/AnimatedMesh.h
+  src/AnimatedModel.h
 )
 
 set(extra_files

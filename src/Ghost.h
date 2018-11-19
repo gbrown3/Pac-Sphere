@@ -17,6 +17,8 @@
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "AnimatedModel.h"
+
 namespace pacsphere {
     
     enum Ghost_Type {
@@ -44,13 +46,14 @@ namespace pacsphere {
         
     private:
         
-        std::shared_ptr<basicgraphics::Model> _model;
+        std::shared_ptr<AnimatedModel> _model;
         
-        std::shared_ptr<basicgraphics::Model> getModelInstance(string fileName);
+        std::shared_ptr<AnimatedModel> getModelInstance(string fileName);
         
         const glm::vec3 _position;
         
         glm::vec4 _ghostColor;
+        std::vector<glm::vec4> _meshColors;
     };
     
 }
