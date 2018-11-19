@@ -212,9 +212,9 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
     
     maze->draw(_shader, sphereFrame);
-    //pacman->draw(_shader, model);
+    pacman->draw(_shader, model);
     
-    inky->draw(_ghostShader, model);
+    //inky->draw(_ghostShader, model);
     //pinky->draw(_ghostShader, model);
     //blinky->draw(_ghostShader, model);
     //clyde->draw(_ghostShader, model);

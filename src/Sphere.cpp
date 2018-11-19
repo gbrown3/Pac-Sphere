@@ -67,7 +67,7 @@ namespace pacsphere {
         const int cpuVertexByteSize = sizeof(Mesh::Vertex) * numVertices;
         const int cpuIndexByteSize = sizeof(int) * cpuIndexArray.size();
 
-        _mesh.reset(new Mesh(textures, GL_TRIANGLE_STRIP, GL_STATIC_DRAW,
+        _mesh.reset(new AnimatedMesh(textures, GL_TRIANGLE_STRIP, GL_STATIC_DRAW,
                              cpuVertexByteSize, cpuIndexByteSize, 0, cpuVertexArray,
                              cpuIndexArray.size(), cpuIndexByteSize, &cpuIndexArray[0]));
     }
