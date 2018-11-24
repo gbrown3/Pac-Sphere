@@ -6,7 +6,7 @@
 #define PAC_SPHERE_SPHERE_H
 
 #include <stdio.h>
-#include <BasicGraphics.h>
+#include "AnimatedMesh.h"
 
 using namespace basicgraphics;
 
@@ -23,7 +23,7 @@ namespace pacsphere {
         const float _radius;
         const glm::vec4 _color;
         const std::shared_ptr<Texture> _texture;
-        std::unique_ptr<basicgraphics::Mesh> _mesh;
+        std::unique_ptr<AnimatedMesh> _mesh;
     };
 }
 
