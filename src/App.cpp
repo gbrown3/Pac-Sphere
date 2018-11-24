@@ -152,7 +152,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
     
     if (rotationAxis != vec3(0, 0, 0)) {
         
-        float rotationAngle = radians(-0.25f);
+        float rotationAngle = radians(-MOVEMENT_SPEED);
         
         if (abs(dir.x) > 0) {
             if (dir.x > 0) {
