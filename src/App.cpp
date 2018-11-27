@@ -49,9 +49,7 @@ void App::onAnalogChange(const VRAnalogEvent &event) {
 void App::onButtonDown(const VRButtonEvent &event) {
     // This routine is called for all Button_Down events.  Check event->getName()
     // to see exactly which button has been pressed down.
-	
-	std::cout << "ButtonDown: " << event.getName() << std::endl;
-    
+
     string name = event.getName();
     
     if (name == "KbdUp_Down") {
@@ -123,7 +121,9 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 
         glEnable(GL_DEPTH_TEST);
         glClearDepth(1.0f);
-        glDepthFunc(GL_LEQUAL);
+        glDepthMask(GL_TRUE);
+        glDepthFunc(GL_LESS);
+		glDepthRange(0.0f, 0.2f);
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
@@ -181,7 +181,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     // This routine is called once per eye/camera.  This is the place to actually
     // draw the scene.
-    
+
 	// clear the canvas and other buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -210,11 +210,22 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     
     _shader.setUniform("model_mat", sphereFrame);
     _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
-    
+
     maze->draw(_shader, sphereFrame);
+
+	_mazeShader.use();
+	_mazeShader.setUniform("mazeHeight", 2.0f);
+	_mazeShader.setUniform("view_mat", view);
+	_mazeShader.setUniform("projection_mat", projection);
+	_mazeShader.setUniform("model_mat", model);
+
+	maze->draw(_mazeShader, sphereFrame);
+
     //pacman->draw(_shader, model);
-    
+
+    _ghostShader.use();
     inky->draw(_ghostShader, model);
+
     //pinky->draw(_ghostShader, model);
     //blinky->draw(_ghostShader, model);
     //clyde->draw(_ghostShader, model);
@@ -250,12 +261,15 @@ void App::reloadShaders()
 	_shader.compileShader("texture.vert", GLSLShader::VERTEX);
 	_shader.compileShader("texture.frag", GLSLShader::FRAGMENT);
 	_shader.link();
-	_shader.use();
-    
+
+    _mazeShader.compileShader("shaders/maze.vert", GLSLShader::VERTEX);
+    _mazeShader.compileShader("shaders/maze.geom", GLSLShader::GEOMETRY);
+    _mazeShader.compileShader("shaders/maze.frag", GLSLShader::FRAGMENT);
+    _mazeShader.link();
+
     _ghostShader.compileShader("texture.vert", GLSLShader::VERTEX);
     _ghostShader.compileShader("shaders/ghost.frag", GLSLShader::FRAGMENT);
     _ghostShader.link();
-    _ghostShader.use();
 }
 
 void App::initializeText() {

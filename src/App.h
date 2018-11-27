@@ -83,6 +83,7 @@ private:
     
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
+    basicgraphics::GLSLProgram _mazeShader;
     basicgraphics::GLSLProgram _ghostShader;
 
 	void initializeText();
