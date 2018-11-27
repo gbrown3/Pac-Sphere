@@ -223,7 +223,7 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 
     //pacman->draw(_shader, model);
 
-    _ghostShader.use();
+    _shader.use();
     inky->draw(_ghostShader, model);
 
     //pinky->draw(_ghostShader, model);

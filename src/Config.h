@@ -23,10 +23,10 @@
 //const std::string DATA_DIR = "/Users/gabe/CPP_Projects/Classes/Graphics465/Pac-Sphere/resources/";
 
 // LINUX path
-const std::string DATA_DIR = "C:/Users/juand/Documents/graphics/Pac-Sphere/resources/";
+const std::string DATA_DIR = "../resources/";
 
 // The file to load for the normal earth texture.
-const std::string MAZE_TEXTURE_PATH = DATA_DIR + "4.png";
+const std::string MAZE_TEXTURE_PATH = DATA_DIR + "maze_1.png";
 
 
 #endif /* Config_h */
