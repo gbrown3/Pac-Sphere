@@ -48,15 +48,19 @@ namespace pacsphere {
                 xCoord = _radius*cos(angle)*topStackLength;
                 zCoord = _radius*sin(angle)*topStackLength;
                 vec3 vertexPos = vec3(xCoord, topStack, zCoord);
-                currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, i/float(STACKS)) };
+                vec2 texturePos = vec2(-j/float(SLICES) + 0.5, i/float(STACKS));
+                currentVertex = { vertexPos, normalize(vertexPos), texturePos};
                 cpuVertexArray.push_back(currentVertex);
+                vertexMap[vertexPos] = texturePos;
 
                 // Bottom vertex
                 xCoord = _radius*cos(angle)*bottomStackLength;
                 zCoord = _radius*sin(angle)*bottomStackLength;
                 vertexPos = vec3(xCoord, bottomStack, zCoord);
-                currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS)) };
+                texturePos = vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS));
+                currentVertex = { vertexPos, normalize(vertexPos), texturePos};
                 cpuVertexArray.push_back(currentVertex);
+                vertexMap[vertexPos] = texturePos;
             }
 
             for (int j = totalVertices; j < totalVertices + SLICES*2 + 1; j+=2 ) {
@@ -72,6 +76,10 @@ namespace pacsphere {
         _mesh.reset(new AnimatedMesh(textures, GL_TRIANGLE_STRIP, GL_STATIC_DRAW,
                              cpuVertexByteSize, cpuIndexByteSize, 0, cpuVertexArray,
                              cpuIndexArray.size(), cpuIndexByteSize, &cpuIndexArray[0]));
+    }
+
+    vec2 Sphere::getTexturePosition(vec3 vertexPos) {
+        return vertexMap[vertexPos];
     }
 
     void Sphere::draw(GLSLProgram &shader, const glm::mat4 &modelMatrix) {

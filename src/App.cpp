@@ -157,11 +157,9 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         if (abs(dir.x) > 0) {
             if (dir.x > 0) {
                 rotationAxis = -mazeY;
-                //rotationAngle = -rotationAngle;
             }
             else {
                 rotationAxis = mazeY;
-                //rotationAngle = -rotationAngle;
             }
         }
         
@@ -169,14 +167,21 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
             dir.x = -dir.x;
             dirXFlipped = true;
         }
-        
-        mat4 rotation = rotate(mat4(1.0), rotationAngle * dir.length(), rotationAxis);
-        sphereFrame = rotation * sphereFrame;
-        mazeY = vec3(rotation * vec4(mazeY, 0));
-        
+
+		mat4 rotation = rotate(mat4(1.0), rotationAngle * dir.length(), rotationAxis);
+
+		if (!pacmanColliding(rotation)) {
+            sphereFrame = rotation * sphereFrame;
+            mazeY = vec3(rotation * vec4(mazeY, 0));
+        }
     }
-    
 }
+
+bool App::pacmanColliding(mat4 rotation) {
+	vec4 pos = rotation * vec4(0, 0, MAZE_RADIUS, 1.0);
+	maze->getTexturePosition(pos);
+	return false;
+};
 
 void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     // This routine is called once per eye/camera.  This is the place to actually
@@ -221,10 +226,9 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 
 	maze->draw(_mazeShader, sphereFrame);
 
-    //pacman->draw(_shader, model);
-
     _shader.use();
-    inky->draw(_ghostShader, model);
+    pacman->draw(_shader, model);
+//    inky->draw(_ghostShader, model);
 
     //pinky->draw(_ghostShader, model);
     //blinky->draw(_ghostShader, model);

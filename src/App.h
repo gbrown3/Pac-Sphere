@@ -80,7 +80,8 @@ private:
     
     vec3 mazeY;
     bool dirXFlipped;
-    
+
+    bool pacmanColliding(mat4 rotation);
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
     basicgraphics::GLSLProgram _mazeShader;
