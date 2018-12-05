@@ -65,6 +65,7 @@ private:
     
     static constexpr float MAZE_RADIUS = 20;
 	static constexpr float PAC_RADIUS = 1.0f;
+    static constexpr float ZOOM_INCREMENT = 2.0f;
 
 	double _lastTime;
 	double _curFrameTime;
@@ -76,6 +77,8 @@ private:
     std::unique_ptr<pacsphere::Ghost> pinky;
     std::unique_ptr<pacsphere::Ghost> blinky;
     std::unique_ptr<pacsphere::Ghost> clyde;
+    
+    glm::vec3 cameraOffset = glm::vec3(0, 0, 60);  // direction to move camera from center of maze
     
     glm::vec3 dir;
     glm::mat4 sphereFrame;

@@ -73,7 +73,16 @@ void App::onButtonDown(const VRButtonEvent &event) {
         dir = vec3(0,0,0);
         sphereFrame = mat4(1.0);
     }
-
+    
+    // Enable zooming in and out
+    else if (name == "KbdEqual_Down") {
+        
+        cameraOffset += vec3(0, 0, -ZOOM_INCREMENT);
+    }
+    else if (name == "KbdMinus_Down") {
+        
+        cameraOffset += vec3(0, 0, ZOOM_INCREMENT);
+    }
 
 }
 
@@ -215,7 +224,7 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 
 	// Setup the view matrix to set where the camera is located in the scene
     vec3 ballPos = vec3(column(sphereFrame, 3));
-    glm::vec3 eye_world = ballPos + glm::vec3(0,0,60);
+    glm::vec3 eye_world = ballPos + cameraOffset;
     glm::mat4 view = glm::lookAt(eye_world, ballPos, glm::vec3(0,1,0));
 
 	// Setup the projection matrix so that things are rendered in perspective
