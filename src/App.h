@@ -69,7 +69,8 @@ private:
 	double _curFrameTime;
     
     std::unique_ptr<pacsphere::Sphere> maze;
-    std::unique_ptr<pacsphere::Sphere> pacman;
+    std::unique_ptr<pacsphere::Pacman> pacman;
+    
     std::unique_ptr<pacsphere::Ghost> inky;
     std::unique_ptr<pacsphere::Ghost> pinky;
     std::unique_ptr<pacsphere::Ghost> blinky;

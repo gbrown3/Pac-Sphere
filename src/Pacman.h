@@ -10,17 +10,28 @@
 
 #include <stdio.h>
 #include <BasicGraphics.h>
+#include "Sphere.h"
 
 namespace pacsphere {
+    
     class Pacman {
+        
     public:
-        Pacman();
-        //virtual ~Pacman();
-        std::unique_ptr<basicgraphics::Mesh> _mesh;
-        // TODO: swap this out with sphere mesh similar to earth once hw3 is done
+        
+        Pacman(glm::vec3 position);
+        
+        void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
+        
     private:
 
         static constexpr float PAC_RADIUS = 1.0f;
+        
+        // TODO: figure out how to make this a static constant
+        glm::vec4 PAC_COLOR = glm::vec4(1, 1, 0, 1);   // Pacman yellow
+        
+        glm::vec3 _position;
+        
+        std::unique_ptr<Sphere> _mesh;
 
     };
 }

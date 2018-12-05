@@ -140,7 +140,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		shared_ptr<Texture> tex2 = Texture::create2DTextureFromFile(MAZE_TEXTURE_PATH);
 		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
         
-        pacman.reset(new pacsphere::Sphere(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), PAC_RADIUS, vec4(1,1,0,1)));
+        pacman.reset(new pacsphere::Pacman(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)));
         
         inky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::INKY));
         pinky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::PINKY));
