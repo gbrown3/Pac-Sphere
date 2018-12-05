@@ -26,23 +26,8 @@ namespace pacsphere {
     void Pacman::animate(float currentFrameTime) {
         
         vector<shared_ptr<Joint>> joints = _mesh->_mesh->getJoints();
-
-        // Right lip movement: (0, PAC_RADIUS, 0) -> (cos(M_PI/4), sin(M_PI/4), 0)
-        // Left lip movement: (0, PAC_RADIUS, 0) -> (cos(M_PI*3/4), sin(M_PI*3/4), 0)
-        
-        cout << "currentFrameTime: " << currentFrameTime << endl;
-        cout << "Animation length: " << ANIMATION_LENGTH << endl << endl;
-        
-        int mod = (int)currentFrameTime % ANIMATION_LENGTH;
-        
-        cout << "currentFrameTime % Animationlength: " << mod << endl << endl;;
         
         float overeallAnimationProgress = ((float)((int)currentFrameTime % ANIMATION_LENGTH))/ANIMATION_LENGTH;
-        
-        cout << "Animation progress: " << overeallAnimationProgress << endl;
-        
-        // 0-0.5*AnimationTime -> opening mouth
-        // 0.5*AnimationTime-AnimationTime -> closing mouth
         
         float leftLipAngle;
         float rightLipAngle;
@@ -50,7 +35,7 @@ namespace pacsphere {
         // If opening mouth
         if (overeallAnimationProgress < 0.5) {
             
-            float angleDifference = M_PI/4 * overeallAnimationProgress*2;
+            float angleDifference = MAX_ANGLE_DIFFERENCE * overeallAnimationProgress*2;
             
             leftLipAngle = M_PI/2 + angleDifference;
             rightLipAngle = M_PI/2 - angleDifference;
@@ -59,19 +44,16 @@ namespace pacsphere {
         // If closing mouth
         else {
             
-            float angleDifference = M_PI/4 * (overeallAnimationProgress - 0.5)*2;
+            float angleDifference = MAX_ANGLE_DIFFERENCE * (overeallAnimationProgress - 0.5)*2;
             
-            leftLipAngle = M_PI*3/4 - angleDifference;
-            rightLipAngle = M_PI/4 + angleDifference;
+            leftLipAngle = (M_PI/2 + MAX_ANGLE_DIFFERENCE) - angleDifference;
+            rightLipAngle = (M_PI/2 - MAX_ANGLE_DIFFERENCE) + angleDifference;
             
         }
     
         // Set new positions using these angles
         vec3 newLeftLipPos = vec3(cos(leftLipAngle), sin(leftLipAngle), 0);
         vec3 newRightLipPos = vec3(cos(rightLipAngle), sin(rightLipAngle), 0);
-        
-        cout << "New left lip pos: " << to_string(newLeftLipPos) << endl;
-        cout << "New right lip pos: " << to_string(newRightLipPos) << endl;
         
         // Assume rightLip is index 1, left is index 2
         joints[1]->_localPosition = newRightLipPos;
