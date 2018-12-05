@@ -78,10 +78,13 @@ private:
     std::unique_ptr<pacsphere::Ghost> blinky;
     std::unique_ptr<pacsphere::Ghost> clyde;
     
+    std::unique_ptr<basicgraphics::Sphere> test_sphere;
+    
     glm::vec3 cameraOffset = glm::vec3(0, 0, 60);  // direction to move camera from center of maze
     
     glm::vec3 dir;
-    glm::mat4 sphereFrame;
+    glm::mat4 mazeFrame;
+    glm::mat4 pacFrame;
     
     vec3 mazeY;
     bool dirXFlipped;

@@ -22,7 +22,8 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     _curFrameTime = 0.0;
     
     dir = vec3(0.0);
-    sphereFrame = mat4(1.0);
+    mazeFrame = mat4(1.0);
+    pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     
     mazeY = vec3(0, 1, 0);
     dirXFlipped = false;
@@ -71,7 +72,7 @@ void App::onButtonDown(const VRButtonEvent &event) {
     // If the ball rolls off the screen, you can press SPACEBAR to reset its position
     else if (name == "KbdSpace_Down") {
         dir = vec3(0,0,0);
-        sphereFrame = mat4(1.0);
+        mazeFrame = mat4(1.0);
     }
     
     // Enable zooming in and out
@@ -148,30 +149,38 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 
 		//initializeText();
 		shared_ptr<Texture> tex2 = Texture::create2DTextureFromFile(MAZE_TEXTURE_PATH);
+        
+        
+        // Setup maze
 		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
+        
+        test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1)));
         
         
         
         // Set up Pacman and joints for animation
-        vec3 pacmanCenter = vec3(0, 0, MAZE_RADIUS + PAC_RADIUS);
-        
-        pacman.reset(new pacsphere::Pacman(pacmanCenter));
+        //pacman.reset(new pacsphere::Pacman(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)));
+        pacman.reset(new pacsphere::Pacman(vec3(0, 0, 0)));
         
         // Make the joints
         vector<shared_ptr<pacsphere::Joint>> newJoints = vector<shared_ptr<pacsphere::Joint>>();
         
-        Joint* centerJointPtr = new Joint(pacmanCenter);
+        // NOTE: each joint is in pacman model space, so origin is at center of pacman sphere
+        // RED
+        Joint* centerJointPtr = new Joint(vec3(0, 0, 0), vec4(1, 0, 0, 1));
         shared_ptr<Joint> centerJoint(centerJointPtr);
+        
+        // GREEN
+        Joint* rightLipPtr = new Joint(vec3(0, PAC_RADIUS, 0), vec4(0, 1, 0, 1));
+        shared_ptr<Joint> rightLip(rightLipPtr);
 
-        Joint* topLipPtr = new Joint(pacmanCenter + vec3(0, PAC_RADIUS, 0));
-        shared_ptr<Joint> topLip(topLipPtr);
-
-        Joint* bottomLipPtr = new Joint(pacmanCenter + vec3(0, PAC_RADIUS, 0));
-        shared_ptr<Joint> bottomLip(bottomLipPtr);
+        // BLUE
+        Joint* leftLipPtr = new Joint(vec3(0, PAC_RADIUS, 0), vec4(0, 0, 1, 1));
+        shared_ptr<Joint> leftLip(leftLipPtr);
         
         newJoints.push_back(centerJoint);
-        newJoints.push_back(topLip);
-        newJoints.push_back(bottomLip);
+        newJoints.push_back(rightLip);
+        newJoints.push_back(leftLip);
 
         // Add them to pacman's mesh
         pacman->_mesh->_mesh->defineJoints(newJoints);
@@ -185,6 +194,9 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         clyde.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::CLYDE));
     }
     
+    
+    
+    // Rotate maze
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
     
     if (rotationAxis != vec3(0, 0, 0)) {
@@ -208,11 +220,16 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         }
         
         mat4 rotation = rotate(mat4(1.0), rotationAngle * dir.length(), rotationAxis);
-        sphereFrame = rotation * sphereFrame;
+        mazeFrame = rotation * mazeFrame;
         mazeY = vec3(rotation * vec4(mazeY, 0));
         
     }
     
+    // Animate pacman
+    pacman->animate(_curFrameTime * 1000);
+ 
+    
+    cout << "lastTime: " << _lastTime << endl << "_curFrameTime" << _curFrameTime << endl;
 }
 
 void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
@@ -223,9 +240,9 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// Setup the view matrix to set where the camera is located in the scene
-    vec3 ballPos = vec3(column(sphereFrame, 3));
-    glm::vec3 eye_world = ballPos + cameraOffset;
-    glm::mat4 view = glm::lookAt(eye_world, ballPos, glm::vec3(0,1,0));
+    vec3 mazeCenter = vec3(column(mazeFrame, 3));
+    glm::vec3 eye_world = mazeCenter + cameraOffset;
+    glm::mat4 view = glm::lookAt(eye_world, mazeCenter, glm::vec3(0,1,0));
 
 	// Setup the projection matrix so that things are rendered in perspective
 	GLfloat windowHeight = renderState.index().getValue("FramebufferHeight");
@@ -245,11 +262,12 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	_shader.setUniform("normal_mat", mat3(transpose(inverse(model))));
 	_shader.setUniform("eye_world", eye_world);
     
-    _shader.setUniform("model_mat", sphereFrame);
-    _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
+    _shader.setUniform("model_mat", mazeFrame);
+    _shader.setUniform("normal_mat", mat3(transpose(inverse(mazeFrame))));
 
     // Draw maze sphere
-    maze->draw(_shader, sphereFrame);
+    //maze->draw(_shader, mazeFrame);
+    test_sphere->draw(_shader, mazeFrame);
 
 	_mazeShader.use();
 	_mazeShader.setUniform("mazeHeight", 2.0f);
@@ -258,13 +276,14 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	_mazeShader.setUniform("model_mat", model);
 
     // Draw 3D maze walls
-    maze->draw(_mazeShader, sphereFrame);
+    //maze->draw(_mazeShader, mazeFrame);
+    
     
     // Draw pacman and ghosts
     _shader.use();
     
-    //pacman->draw(_shader, model);
-    pacman->_mesh->_mesh->drawJoints(_shader, model);
+    //pacman->draw(_shader, pacFrame);
+    pacman->_mesh->_mesh->drawJoints(_shader, pacFrame);
     
     //inky->draw(_ghostShader, model);
     //pinky->draw(_ghostShader, model);

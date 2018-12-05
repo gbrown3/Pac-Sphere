@@ -6,6 +6,7 @@
 //
 
 #include "Joint.h"
+#include "glm/ext.hpp"
 
 using namespace basicgraphics;
 using namespace std;
@@ -14,11 +15,11 @@ using namespace glm;
 namespace pacsphere {
     
     // Root joint
-    Joint::Joint(vec3 localPosition) {
+    Joint::Joint(vec3 localPosition, vec4 testColor) {
         
         _localPosition = localPosition;
         _childJoints = vector<shared_ptr<Joint>>();
-        _jointSphere.reset(new Sphere(localPosition, SPHERE_RADIUS, vec4(1, 0, 0, 1)));
+        _jointSphere.reset(new Sphere(vec3(0, 0, 0), SPHERE_RADIUS, testColor));
     }
     
     // Normal Joint
@@ -42,6 +43,9 @@ namespace pacsphere {
     
     void Joint::draw(GLSLProgram &shader, const mat4 &modelMatrix) {
         
-        _jointSphere->draw(shader, modelMatrix);
+        //cout << "Joint pos at draw time: " << to_string(_localPosition) << endl;
+        
+        mat4 translateToLocalPos = glm::translate(mat4(1), _localPosition);
+        _jointSphere->draw(shader, translateToLocalPos * modelMatrix);
     }
 }
