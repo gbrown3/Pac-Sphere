@@ -33,6 +33,7 @@ using namespace MinVR;
 #include "Pacman.h"
 #include "Sphere.h"
 #include "Ghost.h"
+#include "Joint.h"
 #include "Config.h"
 
 

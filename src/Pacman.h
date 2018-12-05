@@ -22,6 +22,8 @@ namespace pacsphere {
         
         void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
         
+        std::unique_ptr<Sphere> _mesh;
+        
     private:
 
         static constexpr float PAC_RADIUS = 1.0f;
@@ -31,7 +33,6 @@ namespace pacsphere {
         
         glm::vec3 _position;
         
-        std::unique_ptr<Sphere> _mesh;
 
     };
 }

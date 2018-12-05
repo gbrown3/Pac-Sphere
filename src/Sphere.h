@@ -17,13 +17,15 @@ namespace pacsphere {
         ~Sphere(){};
         void setupSphereMesh();
         void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
-
+        
+        
+        std::unique_ptr<AnimatedMesh> _mesh;
+        
     protected:
         const glm::vec3 _position;
         const float _radius;
         const glm::vec4 _color;
         const std::shared_ptr<Texture> _texture;
-        std::unique_ptr<AnimatedMesh> _mesh;
     };
 }
 

@@ -22,7 +22,7 @@ namespace pacsphere {
         
     public:
         
-        static constexpr float SPHERE_RADIUS = 0.5f;
+        static constexpr float SPHERE_RADIUS = 0.1f;
         
         // Constuctor for root joint, initialized with coordinate in model space (not world)
         Joint(glm::vec3 localPosition);

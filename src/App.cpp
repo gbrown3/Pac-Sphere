@@ -14,6 +14,7 @@
 using namespace basicgraphics;
 using namespace std;
 using namespace glm;
+using namespace pacsphere;
 
 App::App(int argc, char** argv) : VRApp(argc, argv)
 {
@@ -140,8 +141,35 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		shared_ptr<Texture> tex2 = Texture::create2DTextureFromFile(MAZE_TEXTURE_PATH);
 		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
         
-        pacman.reset(new pacsphere::Pacman(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)));
         
+        
+        // Set up Pacman and joints for animation
+        vec3 pacmanCenter = vec3(0, 0, MAZE_RADIUS + PAC_RADIUS);
+        
+        pacman.reset(new pacsphere::Pacman(pacmanCenter));
+        
+        // Make the joints
+        vector<shared_ptr<pacsphere::Joint>> newJoints = vector<shared_ptr<pacsphere::Joint>>();
+        
+        Joint* centerJointPtr = new Joint(pacmanCenter);
+        shared_ptr<Joint> centerJoint(centerJointPtr);
+
+        Joint* topLipPtr = new Joint(pacmanCenter + vec3(0, PAC_RADIUS, 0));
+        shared_ptr<Joint> topLip(topLipPtr);
+
+        Joint* bottomLipPtr = new Joint(pacmanCenter + vec3(0, PAC_RADIUS, 0));
+        shared_ptr<Joint> bottomLip(bottomLipPtr);
+        
+        newJoints.push_back(centerJoint);
+        newJoints.push_back(topLip);
+        newJoints.push_back(bottomLip);
+
+        // Add them to pacman's mesh
+        pacman->_mesh->_mesh->defineJoints(newJoints);
+        
+        
+        
+        // Setup the ghosts
         inky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::INKY));
         pinky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::PINKY));
         blinky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::BLINKY));
@@ -226,7 +254,8 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     // Draw pacman and ghosts
     _shader.use();
     
-    pacman->draw(_shader, model);
+    //pacman->draw(_shader, model);
+    pacman->_mesh->_mesh->drawJoints(_shader, model);
     
     //inky->draw(_ghostShader, model);
     //pinky->draw(_ghostShader, model);

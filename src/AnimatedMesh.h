@@ -33,6 +33,11 @@ namespace pacsphere {
          */
         void defineJoints(std::vector<std::shared_ptr<Joint>> newJoints) { _joints = newJoints; };
         
+        /**
+         * Go through every joint in the list and draw them
+         */
+        void drawJoints(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
+        
         std::vector<std::shared_ptr<Joint>> getJoints() { return _joints; };
         std::vector<basicgraphics::Mesh::Vertex> getVertexData() { return _vertexData; };
         
