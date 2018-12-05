@@ -211,6 +211,7 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.setUniform("model_mat", sphereFrame);
     _shader.setUniform("normal_mat", mat3(transpose(inverse(sphereFrame))));
 
+    // Draw maze sphere
     maze->draw(_shader, sphereFrame);
 
 	_mazeShader.use();
@@ -219,13 +220,15 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	_mazeShader.setUniform("projection_mat", projection);
 	_mazeShader.setUniform("model_mat", model);
 
-	maze->draw(_mazeShader, sphereFrame);
-
-    //pacman->draw(_shader, model);
-
+    // Draw 3D maze walls
+    maze->draw(_mazeShader, sphereFrame);
+    
+    // Draw pacman and ghosts
     _shader.use();
-    inky->draw(_ghostShader, model);
-
+    
+    pacman->draw(_shader, model);
+    
+    //inky->draw(_ghostShader, model);
     //pinky->draw(_ghostShader, model);
     //blinky->draw(_ghostShader, model);
     //clyde->draw(_ghostShader, model);
