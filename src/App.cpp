@@ -23,7 +23,9 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     
     dir = vec3(0.0);
     mazeFrame = mat4(1.0);
-    pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
+    
+    mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
+    pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)) * rotation;
     
     mazeY = vec3(0, 1, 0);
     dirXFlipped = false;
@@ -55,18 +57,57 @@ void App::onButtonDown(const VRButtonEvent &event) {
     string name = event.getName();
     
     if (name == "KbdUp_Down") {
+        
+        // Update maze rotation direction
         dir = vec3(0,-MOVEMENT_SPEED,0);
+        
+        // Orient pacman
+        pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     }
     else if (name == "KbdDown_Down") {
+        
+        // Update maze rotation direction
         dir = vec3(0,MOVEMENT_SPEED,0);
+        
+        // Orient pacman
+        
+        
+        mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
+        mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1)) * startingTransform;
+        
+        //pacFrame = startingTransform * rotation;
     }
     else if (name == "KbdLeft_Down") {
+        
+        // Update maze rotation direction
         dir = vec3(MOVEMENT_SPEED,0,0);
         dirXFlipped = false;
+        
+        // Orient pacman
+        mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
+        mat4 rotation = rotate(mat4(1), radians(90.0f), vec3(0, 0, 1)) * startingTransform;
+        
+        //pacFrame = rotation * startingTransform;
     }
     else if (name == "KbdRight_Down") {
+        
+        // Update maze rotation direction
         dir = vec3(-MOVEMENT_SPEED,0,0);
         dirXFlipped = false;
+        
+        // Orient pacman
+        vec3 pacPos = vec3(column(pacFrame, 3));
+        
+        mat4 moveToOrigin = translate(mat4(1), -pacPos);
+        mat4 rotation = rotate(mat4(1), radians(90.0f), vec3(0, 0, 1));
+        mat4 moveBack = translate(mat4(1), pacPos);;
+        
+        
+        cout << "pacframe before rotation: " << endl << to_string(pacFrame) << endl;
+        
+        //pacFrame = moveBack * rotation * moveToOrigin * pacFrame;
+        
+        cout << "pacframe after rotation: " << endl << to_string(pacFrame) << endl;
     }
     
     // If the ball rolls off the screen, you can press SPACEBAR to reset its position
@@ -85,6 +126,8 @@ void App::onButtonDown(const VRButtonEvent &event) {
         cameraOffset += vec3(0, 0, ZOOM_INCREMENT);
     }
 
+    
+    cout << "BUtton presed: " << name << endl << endl;
 }
 
 void App::onButtonUp(const VRButtonEvent &event) {
@@ -227,9 +270,6 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
     
     // Animate pacman
     pacman->animate(_curFrameTime * 1000);
- 
-    
-    cout << "lastTime: " << _lastTime << endl << "_curFrameTime" << _curFrameTime << endl;
 }
 
 void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
@@ -266,8 +306,8 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.setUniform("normal_mat", mat3(transpose(inverse(mazeFrame))));
 
     // Draw maze sphere
-    //maze->draw(_shader, mazeFrame);
-    test_sphere->draw(_shader, mazeFrame);
+    maze->draw(_shader, mazeFrame);
+    //test_sphere->draw(_shader, mazeFrame);
 
 	_mazeShader.use();
 	_mazeShader.setUniform("mazeHeight", 2.0f);
@@ -276,13 +316,13 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	_mazeShader.setUniform("model_mat", model);
 
     // Draw 3D maze walls
-    //maze->draw(_mazeShader, mazeFrame);
+    maze->draw(_mazeShader, mazeFrame);
     
     
     // Draw pacman and ghosts
     _shader.use();
     
-    //pacman->draw(_shader, pacFrame);
+    pacman->draw(_shader, pacFrame);
     pacman->_mesh->_mesh->drawJoints(_shader, pacFrame);
     
     //inky->draw(_ghostShader, model);
