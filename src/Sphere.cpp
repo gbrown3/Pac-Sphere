@@ -18,7 +18,7 @@ namespace pacsphere {
     void Sphere::setupSphereMesh() {
         const int STACKS = 500;
         const int SLICES = 500;
-        vector<Mesh::Vertex> cpuVertexArray = vector<Mesh::Vertex>();
+        vector<AnimatedMesh::Vertex> cpuVertexArray = vector<AnimatedMesh::Vertex>();
         vector<int> cpuIndexArray = vector<int>();
 
         vector<shared_ptr<Texture>> textures = vector<shared_ptr<Texture>>();
@@ -27,7 +27,7 @@ namespace pacsphere {
         }
 
         float stackAngle = M_PI/STACKS;
-        Mesh::Vertex currentVertex;
+        AnimatedMesh::Vertex currentVertex;
 
 
         for (int i = 0; i < STACKS; i++) {
@@ -48,14 +48,20 @@ namespace pacsphere {
                 xCoord = _radius*cos(angle)*topStackLength;
                 zCoord = _radius*sin(angle)*topStackLength;
                 vec3 vertexPos = vec3(xCoord, topStack, zCoord);
+                
+                // TODO: add in joint weights
                 currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, i/float(STACKS)) };
+                
                 cpuVertexArray.push_back(currentVertex);
 
                 // Bottom vertex
                 xCoord = _radius*cos(angle)*bottomStackLength;
                 zCoord = _radius*sin(angle)*bottomStackLength;
                 vertexPos = vec3(xCoord, bottomStack, zCoord);
+                
+                // TODO: add in joint weights
                 currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS)) };
+                
                 cpuVertexArray.push_back(currentVertex);
             }
 
@@ -66,7 +72,7 @@ namespace pacsphere {
         }
 
         const int numVertices = cpuVertexArray.size();
-        const int cpuVertexByteSize = sizeof(Mesh::Vertex) * numVertices;
+        const int cpuVertexByteSize = sizeof(AnimatedMesh::Vertex) * numVertices;
         const int cpuIndexByteSize = sizeof(int) * cpuIndexArray.size();
 
         _mesh.reset(new AnimatedMesh(textures, GL_TRIANGLE_STRIP, GL_STATIC_DRAW,
