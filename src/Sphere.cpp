@@ -10,8 +10,8 @@ using namespace std;
 using namespace basicgraphics;
 
 namespace pacsphere {
-    Sphere::Sphere(const glm::vec3 &position, const float radius, const glm::vec4 &color, const shared_ptr<Texture> texture) :
-    _position(position), _radius(radius), _color(color), _texture(texture) {
+    Sphere::Sphere(const glm::vec3 &position, const float radius, const glm::vec4 &color, const shared_ptr<Texture> texture, std::vector<std::shared_ptr<Joint>> joints) :
+    _position(position), _radius(radius), _color(color), _texture(texture), _joints(joints) {
         setupSphereMesh();
     }
 
@@ -49,8 +49,24 @@ namespace pacsphere {
                 zCoord = _radius*sin(angle)*topStackLength;
                 vec3 vertexPos = vec3(xCoord, topStack, zCoord);
                 
-                // TODO: add in joint weights
-                currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, i/float(STACKS)) };
+                // Add in joint weights, if any were passed in (otherwise they can just be 0, doesn't matter)
+                vec3 weights = vec3(0);
+                
+                if (_joints.size() > 0) {
+                    vec3 centerJointPos = _joints[0]->_localPosition;
+                    vec3 rightJointPos = _joints[1]->_localPosition;
+                    vec3 leftJointPos = _joints[2]->_localPosition;
+                    
+                    // Joint should have more of an effect, and therefore a higher weight the closer it is
+                    // Weight values: 0-1
+                    float centerWeight = 1 - distance(centerJointPos, vertexPos)/(_radius * 2);
+                    float rightWeight = 1 - distance(rightJointPos, vertexPos)/(_radius * 2);
+                    float leftWeight = 1 - distance(leftJointPos, vertexPos)/(_radius * 2);
+                    
+                    weights = vec3(centerWeight, rightWeight, leftWeight);
+                }
+                
+                currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, i/float(STACKS)), weights };
                 
                 cpuVertexArray.push_back(currentVertex);
 
@@ -59,8 +75,24 @@ namespace pacsphere {
                 zCoord = _radius*sin(angle)*bottomStackLength;
                 vertexPos = vec3(xCoord, bottomStack, zCoord);
                 
-                // TODO: add in joint weights
-                currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS)) };
+                
+                // Add in joint weights, if any were passed in (otherwise they can just be 0, doesn't matter)
+                weights = vec3(0);
+                
+                if (_joints.size() > 0) {
+                    vec3 centerJointPos = _joints[0]->_localPosition;
+                    vec3 rightJointPos = _joints[1]->_localPosition;
+                    vec3 leftJointPos = _joints[2]->_localPosition;
+                    
+                    // Joint should have more of an effect, and therefore a higher weight the closer it is
+                    // Weight values: 0-1
+                    float centerWeight = 1 - distance(centerJointPos, vertexPos)/(_radius * 2);
+                    float rightWeight = 1 - distance(rightJointPos, vertexPos)/(_radius * 2);
+                    float leftWeight = 1 - distance(leftJointPos, vertexPos)/(_radius * 2);
+                    
+                    weights = vec3(centerWeight, rightWeight, leftWeight);
+                }
+                currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS)), weights };
                 
                 cpuVertexArray.push_back(currentVertex);
             }
@@ -81,6 +113,7 @@ namespace pacsphere {
     }
 
     void Sphere::draw(GLSLProgram &shader, const glm::mat4 &modelMatrix) {
+        
         glm::mat4 translate = glm::translate(glm::mat4(1.0), _position);
         glm::mat4 model = modelMatrix * translate;
         shader.setUniform("model_mat", model);
@@ -89,6 +122,25 @@ namespace pacsphere {
         _mesh->draw(shader);
         shader.setUniform("model_mat", modelMatrix);
         shader.setUniform("normal_mat", mat3(transpose(inverse(modelMatrix))));
+    }
+    
+    
+    void Sphere::updateJoints(vector<shared_ptr<Joint>> newJoints) {
+        
+        for (int i = 0; i < _joints.size(); i++) {
+            
+            _joints[i]->_localPosition = newJoints[i]->_localPosition;
+        }
+        
+        
+    }
+    
+    void Sphere::drawJoints(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix) {
+        
+        for (shared_ptr<Joint> joint : _joints) {
+            
+            joint->draw(shader, modelMatrix);
+        }
     }
 
 }

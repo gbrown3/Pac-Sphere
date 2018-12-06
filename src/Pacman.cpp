@@ -16,7 +16,29 @@ namespace pacsphere {
     
     Pacman::Pacman(vec3 position) {
         
-        _mesh.reset(new Sphere(position, PAC_RADIUS, PAC_COLOR));
+        // Setup joints for animation
+        vector<shared_ptr<pacsphere::Joint>> newJoints = vector<shared_ptr<pacsphere::Joint>>();
+        
+        // NOTE: each joint is in pacman model space, so origin is at center of pacman sphere
+        // RED
+        Joint* centerJointPtr = new Joint(vec3(0, 0, 0), vec4(1, 0, 0, 1));
+        shared_ptr<Joint> centerJoint(centerJointPtr);
+        
+        // GREEN
+        Joint* rightLipPtr = new Joint(vec3(0, PAC_RADIUS, 0), vec4(0, 1, 0, 1));
+        shared_ptr<Joint> rightLip(rightLipPtr);
+        
+        // BLUE
+        Joint* leftLipPtr = new Joint(vec3(0, PAC_RADIUS, 0), vec4(0, 0, 1, 1));
+        shared_ptr<Joint> leftLip(leftLipPtr);
+        
+        newJoints.push_back(centerJoint);
+        newJoints.push_back(rightLip);
+        newJoints.push_back(leftLip);
+        
+        // Initialize mesh with joints
+        
+        _mesh.reset(new Sphere(position, PAC_RADIUS, PAC_COLOR, nullptr, newJoints));
     }
     
     void Pacman::draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix) {
@@ -25,7 +47,7 @@ namespace pacsphere {
     
     void Pacman::animate(float currentFrameTime) {
         
-        vector<shared_ptr<Joint>> joints = _mesh->_mesh->getJoints();
+        vector<shared_ptr<Joint>> joints = _mesh->getJoints();
         
         float overeallAnimationProgress = ((float)((int)currentFrameTime % ANIMATION_LENGTH))/ANIMATION_LENGTH;
         
@@ -59,6 +81,8 @@ namespace pacsphere {
         joints[1]->_localPosition = newRightLipPos;
         joints[2]->_localPosition = newLeftLipPos;
         
-        _mesh->_mesh->defineJoints(joints);
+        //_mesh->_mesh->defineJoints(joints);
+        
+        _mesh->updateJoints(joints);
     }
 }

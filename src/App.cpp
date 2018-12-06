@@ -201,32 +201,8 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         
         
         
-        // Set up Pacman and joints for animation
-        //pacman.reset(new pacsphere::Pacman(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)));
+        // Set up Pacman
         pacman.reset(new pacsphere::Pacman(vec3(0, 0, 0)));
-        
-        // Make the joints
-        vector<shared_ptr<pacsphere::Joint>> newJoints = vector<shared_ptr<pacsphere::Joint>>();
-        
-        // NOTE: each joint is in pacman model space, so origin is at center of pacman sphere
-        // RED
-        Joint* centerJointPtr = new Joint(vec3(0, 0, 0), vec4(1, 0, 0, 1));
-        shared_ptr<Joint> centerJoint(centerJointPtr);
-        
-        // GREEN
-        Joint* rightLipPtr = new Joint(vec3(0, PAC_RADIUS, 0), vec4(0, 1, 0, 1));
-        shared_ptr<Joint> rightLip(rightLipPtr);
-
-        // BLUE
-        Joint* leftLipPtr = new Joint(vec3(0, PAC_RADIUS, 0), vec4(0, 0, 1, 1));
-        shared_ptr<Joint> leftLip(leftLipPtr);
-        
-        newJoints.push_back(centerJoint);
-        newJoints.push_back(rightLip);
-        newJoints.push_back(leftLip);
-
-        // Add them to pacman's mesh
-        pacman->_mesh->_mesh->defineJoints(newJoints);
         
         
         
@@ -323,7 +299,7 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.use();
     
     pacman->draw(_shader, pacFrame);
-    pacman->_mesh->_mesh->drawJoints(_shader, pacFrame);
+    pacman->_mesh->drawJoints(_shader, pacFrame);
     
     //inky->draw(_ghostShader, model);
     //pinky->draw(_ghostShader, model);

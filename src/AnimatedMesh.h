@@ -66,19 +66,6 @@ namespace pacsphere {
         
         // BELOW: public methods unique to AnimatedMesh
         
-        
-        /**
-         * Normally I'd have joints be passed into the constructor, but the constructor is already so messy that
-         * I'm allowing joints to be set for readability
-         */
-        void defineJoints(std::vector<std::shared_ptr<Joint>> newJoints) { _joints = newJoints; };
-        
-        /**
-         * Go through every joint in the list and draw them
-         */
-        void drawJoints(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
-        
-        std::vector<std::shared_ptr<Joint>> getJoints() { return _joints; };
         std::vector<pacsphere::AnimatedMesh::Vertex> getVertexData() { return _vertexData; };
         
     private:
@@ -99,8 +86,7 @@ namespace pacsphere {
         
         std::vector<std::shared_ptr<basicgraphics::Texture> > _textures;
         
-        // UNIQUE TO ANIMATEDMESH:
-        std::vector<std::shared_ptr<Joint>> _joints;
+        // Unique to AnimatedMesh
         std::vector<pacsphere::AnimatedMesh::Vertex> _vertexData;
     };
 }

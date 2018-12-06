@@ -197,17 +197,4 @@ namespace pacsphere {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexVBO);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, startByteOffset, indexByteSize, index);
     }
-    
-    
-    void AnimatedMesh::drawJoints(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix) {
-        
-        for (shared_ptr<Joint> joint : _joints) {
-            
-            joint->draw(shader, modelMatrix);
-        }
-    }
-    
-    
-    
-    
 }
