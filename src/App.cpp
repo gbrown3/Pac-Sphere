@@ -27,6 +27,11 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
     pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)) * rotation;
     
+    inkyFrame = rotate(mat4(1.0), radians(90.0f), vec3(1, 0, 0));
+    pinkyFrame = rotate(mat4(1.0), radians(180.0f), vec3(1, 0, 0));
+    blinkyFrame = rotate(mat4(1.0), radians(45.0f), vec3(1, 0, 0));
+    clydeFrame = rotate(mat4(1.0), radians(-90.0f), vec3(1, 0, 0));
+    
     mazeY = vec3(0, 1, 0);
     dirXFlipped = false;
 }
@@ -203,7 +208,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         // Setup maze
 		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
         
-        test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1)));
+        test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(0.1, 0.1, 1, 1)));
         
         
         
@@ -279,9 +284,6 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	
 	_shader.setUniform("view_mat", view);
 	_shader.setUniform("projection_mat", projection);
-	
-	_shader.setUniform("model_mat", model);
-	_shader.setUniform("normal_mat", mat3(transpose(inverse(model))));
 	_shader.setUniform("eye_world", eye_world);
     
     _shader.setUniform("model_mat", mazeFrame);
@@ -327,12 +329,26 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     pacman->_mesh->drawJoints(_pacShader, pacFrame);
     
     // Draw ghosts
-    _shader.use();
+    _ghostShader.use();
+    _ghostShader.setUniform("view_mat", view);
+    _ghostShader.setUniform("projection_mat", projection);
+    _ghostShader.setUniform("eye_world", eye_world);
     
-    //inky->draw(_ghostShader, model);
-    //pinky->draw(_ghostShader, model);
-    //blinky->draw(_ghostShader, model);
-    //clyde->draw(_ghostShader, model);
+    _ghostShader.setUniform("model_mat", inkyFrame);
+    _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(inkyFrame))));
+    inky->draw(_ghostShader, mazeFrame * inkyFrame);
+    
+    _ghostShader.setUniform("model_mat", pinkyFrame);
+    _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(pinkyFrame))));
+    pinky->draw(_ghostShader, mazeFrame * pinkyFrame);
+    
+    _ghostShader.setUniform("model_mat", blinkyFrame);
+    _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(blinkyFrame))));
+    blinky->draw(_ghostShader, mazeFrame * blinkyFrame);
+    
+    _ghostShader.setUniform("model_mat", clydeFrame);
+    _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(clydeFrame))));
+    clyde->draw(_ghostShader, mazeFrame * clydeFrame);
 }
 
 void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {

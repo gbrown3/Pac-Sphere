@@ -84,7 +84,13 @@ private:
     
     glm::vec3 dir;
     glm::mat4 mazeFrame;
+    
     glm::mat4 pacFrame;
+    
+    glm::mat4 inkyFrame;
+    glm::mat4 pinkyFrame;
+    glm::mat4 blinkyFrame;
+    glm::mat4 clydeFrame;
     
     vec3 mazeY;
     bool dirXFlipped;
