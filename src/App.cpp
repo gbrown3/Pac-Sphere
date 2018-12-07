@@ -140,7 +140,11 @@ void App::onButtonDown(const VRButtonEvent &event) {
     // Switch between maze sphere and test sphere
     else if (name == "KbdM_Down") {
         
-        renderTestSphere = !renderTestSphere;
+        renderTestSphere = false;
+    }
+    else if (name == "KbdT_Down") {
+        
+        renderTestSphere = true;
     }
     
     // Enable/disable maze walls
