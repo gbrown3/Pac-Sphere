@@ -136,6 +136,18 @@ void App::onButtonDown(const VRButtonEvent &event) {
         
         useJointAnimations = !useJointAnimations;
     }
+    
+    // Switch between maze sphere and test sphere
+    else if (name == "KbdM_Down") {
+        
+        renderTestSphere = !renderTestSphere;
+    }
+    
+    // Enable/disable maze walls
+    else if (name == "KbdW_Down") {
+        
+        renderMazeWalls = !renderMazeWalls;
+    }
 
     
     cout << "Button presed: " << name << endl << endl;
@@ -289,9 +301,13 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.setUniform("model_mat", mazeFrame);
     _shader.setUniform("normal_mat", mat3(transpose(inverse(mazeFrame))));
 
-    // Draw maze sphere
-    maze->draw(_shader, mazeFrame);
-    //test_sphere->draw(_shader, mazeFrame);
+    // Draw maze sphere (or test sphere)
+    if (renderTestSphere) {
+        test_sphere->draw(_shader, mazeFrame);
+    }
+    else {
+        maze->draw(_shader, mazeFrame);
+    }
 
 	_mazeShader.use();
 	_mazeShader.setUniform("mazeHeight", 2.0f);
@@ -300,7 +316,10 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	_mazeShader.setUniform("model_mat", model);
 
     // Draw 3D maze walls
-    maze->draw(_mazeShader, mazeFrame);
+    if (renderMazeWalls) {
+        
+        maze->draw(_mazeShader, mazeFrame);
+    }
     
     
     // Draw pacman

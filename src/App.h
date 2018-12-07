@@ -96,6 +96,8 @@ private:
     bool dirXFlipped;
     
     bool useJointAnimations = false;
+    bool renderMazeWalls = true;
+    bool renderTestSphere = false;
     
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
