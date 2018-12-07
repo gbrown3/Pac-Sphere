@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Joint.h"
+#include "glm/ext.hpp"
 
 
 namespace pacsphere {

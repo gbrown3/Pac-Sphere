@@ -61,8 +61,11 @@ namespace pacsphere {
             
             float angleDifference = MAX_ANGLE_DIFFERENCE * overeallAnimationProgress*2;
             
-            leftLipAngle = M_PI/2 + angleDifference;
             rightLipAngle = M_PI/2 - angleDifference;
+            leftLipAngle = M_PI/2 + angleDifference;
+            
+            joints[1]->_rotation = rotate(mat4(1.0), -angleDifference, vec3(0, 0, 1)) * joints[1]->_rotation;
+            joints[2]->_rotation = rotate(mat4(1.0), angleDifference, vec3(0, 0, 1)) * joints[2]->_rotation;
             
         }
         // If closing mouth
@@ -70,22 +73,31 @@ namespace pacsphere {
             
             float angleDifference = MAX_ANGLE_DIFFERENCE * (overeallAnimationProgress - 0.5)*2;
             
-            leftLipAngle = (M_PI/2 + MAX_ANGLE_DIFFERENCE) - angleDifference;
             rightLipAngle = (M_PI/2 - MAX_ANGLE_DIFFERENCE) + angleDifference;
+            leftLipAngle = (M_PI/2 + MAX_ANGLE_DIFFERENCE) - angleDifference;
+            
+            joints[1]->_rotation = rotate(mat4(1.0), angleDifference, vec3(0, 0, 1)) * joints[1]->_rotation;
+            joints[2]->_rotation = rotate(mat4(1.0), -angleDifference, vec3(0, 0, 1)) * joints[2]->_rotation;
             
         }
     
+        // Update rotations
+        //joints[1]->_rotation = rotate(mat4(1.0f), rightLipAngle, vec3(0, 0, 1));
+        //joints[2]->_rotation = rotate(mat4(1.0f), leftLipAngle, vec3(0, 0, 1));
+        
         // Set new positions using these angles
         vec3 newRightLipPos = vec3(cos(rightLipAngle), sin(rightLipAngle), 0);
         vec3 newLeftLipPos = vec3(cos(leftLipAngle), sin(leftLipAngle), 0);
         
+        
+        
+//        vec3 newRightLipPos = vec3(0);
+//        vec3 newLeftLipPos = vec3(0);
+        
+        
         // Assume rightLip is index 1, left is index 2
         joints[1]->_localPosition = newRightLipPos;
         joints[2]->_localPosition = newLeftLipPos;
-        
-        // Update rotations
-        joints[1]->_rotation = rotate(mat4(1.0f), radians(rightLipAngle), vec3(0, 0, 1));
-        joints[2]->_rotation = rotate(mat4(1.0f), radians(leftLipAngle), vec3(0, 0, 1));
         
         
         _mesh->updateJoints(joints);

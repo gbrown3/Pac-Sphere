@@ -89,6 +89,8 @@ private:
     vec3 mazeY;
     bool dirXFlipped;
     
+    bool useJointAnimations = false;
+    
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
     basicgraphics::GLSLProgram _pacShader;

@@ -45,6 +45,9 @@ uniform mat3 normal_mat;
 // Used to determine new vertex positions when joint has been moved
 uniform mat4 centerJointRotation, rightJointRotation, leftJointRotation;
 
+// Stand in for boolean. 1 = use joints, 0 = don't
+uniform int useJoints;
+
 out vec3 position_world, normal_world;
 out vec2 texture_coordinates;
 
@@ -52,17 +55,31 @@ out vec2 texture_coordinates;
 void main () {
     
     // Ultimate vertex position should be affected by a combination of how each joint has moved
-    vec4 centerJointImpact = vertex_joint_weights[0] * (centerJointRotation * vec4(vertex_position, 1));
-    vec4 rightJointImpact = vertex_joint_weights[1] * (rightJointRotation * vec4(vertex_position, 1));
-    vec4 leftJointImpact = vertex_joint_weights[2] * (leftJointRotation * vec4(vertex_position, 1));
     
-    vec4 newModelPosition = centerJointImpact + rightJointImpact + leftJointImpact;
+    mat4 jointRotation =    vertex_joint_weights[0] * centerJointRotation +
+                            vertex_joint_weights[1] * rightJointRotation  +
+                            vertex_joint_weights[2] * leftJointRotation;
+    
+    vec4 newModelPosition = jointRotation * vec4(vertex_position, 1.0);
+    vec3 newVertexNormal = vec3(jointRotation * vec4(vertex_normal, 1.0));
+    
+    
+    vec3 jointPosition = vec3(model_mat * newModelPosition);
+    vec3 standardPosition = vec3 (model_mat * vec4(vertex_position, 1.0));
+    
+    position_world = useJoints * jointPosition + (1-useJoints) * standardPosition;
     
     //position_world = vec3 (model_mat * newModelPosition);
-    position_world = vec3 (model_mat * vec4(vertex_position, 1.0));
+    // Uncomment below for normal shading
+    //position_world = vec3 (model_mat * vec4(vertex_position, 1.0));
     
-    // TODO: incorporate the joint rotations into the normal too
-    normal_world = normalize(normal_mat * vertex_normal);
+    vec3 jointNormal = normalize(normal_mat * newVertexNormal);
+    vec3 standardNormal = normalize(normal_mat * vertex_normal);
+    
+    normal_world = useJoints * jointNormal + (1-useJoints) * standardNormal;
+    //normal_world = normalize(normal_mat * newVertexNormal);
+    //Uncomment below for normal shading
+    //normal_world = normalize(normal_mat * vertex_normal);
     
     texture_coordinates = vertex_texcoord;
     gl_Position = projection_mat * view_mat * vec4 (position_world, 1.0);

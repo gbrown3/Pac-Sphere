@@ -125,9 +125,15 @@ void App::onButtonDown(const VRButtonEvent &event) {
         
         cameraOffset += vec3(0, 0, ZOOM_INCREMENT);
     }
+    
+    // Enable/Disable joint animation
+    else if (name == "KbdJ_Down") {
+        
+        useJointAnimations = !useJointAnimations;
+    }
 
     
-    cout << "BUtton presed: " << name << endl << endl;
+    cout << "Button presed: " << name << endl << endl;
 }
 
 void App::onButtonUp(const VRButtonEvent &event) {
@@ -310,7 +316,12 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _pacShader.setUniform("rightJointRotation", joints[1]->_rotation);
     _pacShader.setUniform("leftJointRotation", joints[2]->_rotation);
     
+    _pacShader.setUniform("useJoints", useJointAnimations);
     
+//    cout << "centerJointRotation: " << to_string(joints[0]->_rotation) << endl;
+//    cout << "rightJointRotation: " << to_string(joints[1]->_rotation) << endl;
+//    cout << "leftJointRotation: " << to_string(joints[2]->_rotation) << endl;
+//
     
     pacman->draw(_pacShader, pacFrame);
     pacman->_mesh->drawJoints(_pacShader, pacFrame);

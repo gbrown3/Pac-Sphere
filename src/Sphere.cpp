@@ -63,7 +63,15 @@ namespace pacsphere {
                     float rightWeight = 1 - distance(rightJointPos, vertexPos)/(_radius * 2);
                     float leftWeight = 1 - distance(leftJointPos, vertexPos)/(_radius * 2);
                     
+                    // Average out weights so they all add to 1
+                    float totalWeight = centerWeight + rightWeight + leftWeight;
+                    
+                    centerWeight = centerWeight/totalWeight;
+                    rightWeight = rightWeight/totalWeight;
+                    leftWeight = leftWeight/totalWeight;
+                    
                     weights = vec3(centerWeight, rightWeight, leftWeight);
+                    //cout << "Weights(center, right, left): " << to_string(weights);
                 }
                 
                 currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, i/float(STACKS)), weights };
@@ -90,7 +98,15 @@ namespace pacsphere {
                     float rightWeight = 1 - distance(rightJointPos, vertexPos)/(_radius * 2);
                     float leftWeight = 1 - distance(leftJointPos, vertexPos)/(_radius * 2);
                     
+                    // Average out weights so they all add to 1
+                    float totalWeight = centerWeight + rightWeight + leftWeight;
+                    
+                    centerWeight = centerWeight/totalWeight;
+                    rightWeight = rightWeight/totalWeight;
+                    leftWeight = leftWeight/totalWeight;
+                    
                     weights = vec3(centerWeight, rightWeight, leftWeight);
+                    //cout << "Weights(center, right, left): " << to_string(weights);
                 }
                 currentVertex = { vertexPos, normalize(vertexPos), vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS)), weights };
                 
