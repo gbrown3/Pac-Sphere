@@ -91,6 +91,7 @@ private:
     
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
+    basicgraphics::GLSLProgram _pacShader;
     basicgraphics::GLSLProgram _mazeShader;
     basicgraphics::GLSLProgram _ghostShader;
 

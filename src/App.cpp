@@ -295,11 +295,28 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     maze->draw(_mazeShader, mazeFrame);
     
     
-    // Draw pacman and ghosts
-    _shader.use();
+    // Draw pacman
+    _pacShader.use();
     
-    pacman->draw(_shader, pacFrame);
-    pacman->_mesh->drawJoints(_shader, pacFrame);
+    _pacShader.setUniform("view_mat", view);
+    _pacShader.setUniform("projection_mat", projection);
+    
+    _pacShader.setUniform("model_mat", model);
+    _pacShader.setUniform("normal_mat", mat3(transpose(inverse(pacFrame))));
+    _pacShader.setUniform("eye_world", eye_world);
+    
+    vector<shared_ptr<Joint>> joints = pacman->_mesh->getJoints();
+    _pacShader.setUniform("centerJointRotation", joints[0]->_rotation);
+    _pacShader.setUniform("rightJointRotation", joints[1]->_rotation);
+    _pacShader.setUniform("leftJointRotation", joints[2]->_rotation);
+    
+    
+    
+    pacman->draw(_pacShader, pacFrame);
+    pacman->_mesh->drawJoints(_pacShader, pacFrame);
+    
+    // Draw ghosts
+    _shader.use();
     
     //inky->draw(_ghostShader, model);
     //pinky->draw(_ghostShader, model);
@@ -337,6 +354,10 @@ void App::reloadShaders()
 	_shader.compileShader("texture.vert", GLSLShader::VERTEX);
 	_shader.compileShader("texture.frag", GLSLShader::FRAGMENT);
 	_shader.link();
+    
+    _pacShader.compileShader("shaders/pacman.vert", GLSLShader::VERTEX);
+    _pacShader.compileShader("shaders/pacman.frag", GLSLShader::FRAGMENT);
+    _pacShader.link();
 
     _mazeShader.compileShader("shaders/maze.vert", GLSLShader::VERTEX);
     _mazeShader.compileShader("shaders/maze.geom", GLSLShader::GEOMETRY);

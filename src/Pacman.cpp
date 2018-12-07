@@ -7,10 +7,12 @@
 
 #include "Pacman.h"
 #include "Sphere.h"
+#include <glm/glm.hpp>
 #include "glm/ext.hpp"
 
 using namespace std;
 using namespace basicgraphics;
+using namespace glm;
 
 namespace pacsphere {
     
@@ -74,14 +76,17 @@ namespace pacsphere {
         }
     
         // Set new positions using these angles
-        vec3 newLeftLipPos = vec3(cos(leftLipAngle), sin(leftLipAngle), 0);
         vec3 newRightLipPos = vec3(cos(rightLipAngle), sin(rightLipAngle), 0);
+        vec3 newLeftLipPos = vec3(cos(leftLipAngle), sin(leftLipAngle), 0);
         
         // Assume rightLip is index 1, left is index 2
         joints[1]->_localPosition = newRightLipPos;
         joints[2]->_localPosition = newLeftLipPos;
         
-        //_mesh->_mesh->defineJoints(joints);
+        // Update rotations
+        joints[1]->_rotation = rotate(mat4(1.0f), radians(rightLipAngle), vec3(0, 0, 1));
+        joints[2]->_rotation = rotate(mat4(1.0f), radians(leftLipAngle), vec3(0, 0, 1));
+        
         
         _mesh->updateJoints(joints);
     }
