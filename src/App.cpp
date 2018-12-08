@@ -219,7 +219,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         // Setup maze
 		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
         
-        test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(0.1, 0.1, 1, 1)));
+        test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 1, 1, 1)));
         test_cylinder.reset(new basicgraphics::Cylinder(vec3(0), vec3(0, 10, 0), 1.0f, vec4(0, 1, 0, 1)));
         
         
