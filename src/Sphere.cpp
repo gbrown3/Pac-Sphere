@@ -79,7 +79,6 @@ namespace pacsphere {
                     leftWeight = leftWeight/totalWeight;
 
                     weights = vec3(centerWeight, rightWeight, leftWeight);
-                    //cout << "Weights(center, right, left): " << to_string(weights);
                 }
                 vec2 texturePos = vec2(-j/float(SLICES) + 0.5, i/float(STACKS));
                 currentVertex = { vertexPos, normalize(vertexPos), texturePos};
@@ -112,7 +111,6 @@ namespace pacsphere {
                     leftWeight = leftWeight/totalWeight;
 
                     weights = vec3(centerWeight, rightWeight, leftWeight);
-                    //cout << "Weights(center, right, left): " << to_string(weights);
                 }
                 texturePos = vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS));
                 currentVertex = { vertexPos, normalize(vertexPos), texturePos};
