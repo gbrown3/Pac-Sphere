@@ -81,7 +81,7 @@ namespace pacsphere {
                     weights = vec3(centerWeight, rightWeight, leftWeight);
                 }
                 vec2 texturePos = vec2(-j/float(SLICES) + 0.5, i/float(STACKS));
-                currentVertex = { vertexPos, normalize(vertexPos), texturePos};
+                currentVertex = { vertexPos, normalize(vertexPos), texturePos, weights};
                 cpuVertexArray.push_back(currentVertex);
 //                vertexMap[vertexPos] = texturePos;
 
@@ -113,7 +113,7 @@ namespace pacsphere {
                     weights = vec3(centerWeight, rightWeight, leftWeight);
                 }
                 texturePos = vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS));
-                currentVertex = { vertexPos, normalize(vertexPos), texturePos};
+                currentVertex = { vertexPos, normalize(vertexPos), texturePos, weights};
                 cpuVertexArray.push_back(currentVertex);
 //                vertexMap[vertexPos] = texturePos;
             }
