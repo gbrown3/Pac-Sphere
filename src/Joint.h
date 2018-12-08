@@ -22,10 +22,12 @@ namespace pacsphere {
         
     public:
         
-        static constexpr float SPHERE_RADIUS = 0.5f;
+        static constexpr float SPHERE_RADIUS = 0.1f;
         
-        // Constuctor for root joint, initialized with coordinate in model space (not world)
-        Joint(glm::vec3 localPosition);
+        glm::vec3 _localPosition;
+        
+        // Constuctor for root joint, initialized with coordinate in model space (not world) and color to make sphere representing its pos
+        Joint(glm::vec3 localPosition, glm::vec4 testColor);
         
         // Constructor for all other joints
         Joint(std::shared_ptr<Joint> parentJoint, glm::vec3 localPosition);
@@ -38,7 +40,6 @@ namespace pacsphere {
         
     private:
         
-        glm::vec3 _localPosition;
         std::shared_ptr<pacsphere::Joint> _parentJoint;
         std::vector<std::shared_ptr<Joint>> _childJoints;
         

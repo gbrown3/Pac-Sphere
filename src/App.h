@@ -33,6 +33,7 @@ using namespace MinVR;
 #include "Pacman.h"
 #include "Sphere.h"
 #include "Ghost.h"
+#include "Joint.h"
 #include "Config.h"
 
 
@@ -45,7 +46,7 @@ public:
     virtual ~App();
     
     
-    static constexpr float MOVEMENT_SPEED = 0.1;
+    static constexpr float MOVEMENT_SPEED = 0.3;
 
     
     /** USER INTERFACE CALLBACKS **/
@@ -64,19 +65,26 @@ private:
     
     static constexpr float MAZE_RADIUS = 20;
 	static constexpr float PAC_RADIUS = 1.0f;
+    static constexpr float ZOOM_INCREMENT = 2.0f;
 
 	double _lastTime;
 	double _curFrameTime;
     
     std::unique_ptr<pacsphere::Sphere> maze;
-    std::unique_ptr<pacsphere::Sphere> pacman;
+    std::unique_ptr<pacsphere::Pacman> pacman;
+    
     std::unique_ptr<pacsphere::Ghost> inky;
     std::unique_ptr<pacsphere::Ghost> pinky;
     std::unique_ptr<pacsphere::Ghost> blinky;
     std::unique_ptr<pacsphere::Ghost> clyde;
     
+    std::unique_ptr<basicgraphics::Sphere> test_sphere;
+    
+    glm::vec3 cameraOffset = glm::vec3(0, 0, 60);  // direction to move camera from center of maze
+    
     glm::vec3 dir;
-    glm::mat4 sphereFrame;
+    glm::mat4 mazeFrame;
+    glm::mat4 pacFrame;
     
     vec3 mazeY;
     bool dirXFlipped;

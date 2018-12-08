@@ -5,7 +5,6 @@
 #ifndef PAC_SPHERE_SPHERE_H
 #define PAC_SPHERE_SPHERE_H
 
-#include <unordered_map>
 #include <stdio.h>
 #include "AnimatedMesh.h"
 
@@ -18,15 +17,15 @@ namespace pacsphere {
         ~Sphere(){};
         void setupSphereMesh();
         void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
-        vec2 getTexturePosition(vec3 vertexPosition);
+
+
+        std::unique_ptr<AnimatedMesh> _mesh;
 
     protected:
         const glm::vec3 _position;
         const float _radius;
         const glm::vec4 _color;
         const std::shared_ptr<Texture> _texture;
-        std::unique_ptr<AnimatedMesh> _mesh;
-        std::unordered_map<vec3, vec2> vertexMap;
     };
 }
 

@@ -21,6 +21,15 @@ namespace pacsphere {
     }
     
     
+    void AnimatedMesh::drawJoints(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix) {
+        
+        for (shared_ptr<Joint> joint : _joints) {
+            
+            joint->draw(shader, modelMatrix);
+        }
+    }
+    
+    
     
     
 }
