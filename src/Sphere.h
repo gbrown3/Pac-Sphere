@@ -13,7 +13,7 @@ using namespace basicgraphics;
 namespace pacsphere {
     class Sphere {
     public:
-        Sphere(const glm::vec3 &position, float radius, const glm::vec4 &color, const std::shared_ptr<Texture> texture = nullptr, std::vector<std::shared_ptr<Joint>> joints = std::vector<std::shared_ptr<Joint>>());
+        Sphere(const glm::vec3 &position, float radius, const glm::vec4 &color, const std::string texture = "", std::vector<std::shared_ptr<Joint>> joints = std::vector<std::shared_ptr<Joint>>());
         ~Sphere(){};
         void setupSphereMesh();
         void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
@@ -40,8 +40,6 @@ namespace pacsphere {
         const glm::vec3 _position;
         const float _radius;
         const glm::vec4 _color;
-        const std::shared_ptr<Texture> _texture;
-
         std::vector<std::shared_ptr<Joint>> _joints;
         const string _texturePath;
 //        std::array<std::array<vec3>> vertexMap;

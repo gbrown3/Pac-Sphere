@@ -11,8 +11,8 @@ using namespace std;
 using namespace basicgraphics;
 
 namespace pacsphere {
-    Sphere::Sphere(const glm::vec3 &position, const float radius, const glm::vec4 &color, const shared_ptr<Texture> texture, std::vector<std::shared_ptr<Joint>> joints) :
-    _position(position), _radius(radius), _color(color), _texture(texture), _joints(joints) {
+    Sphere::Sphere(const glm::vec3 &position, const float radius, const glm::vec4 &color, const string texture, std::vector<std::shared_ptr<Joint>> joints) :
+    _position(position), _radius(radius), _color(color), _texturePath(texture), _joints(joints) {
         setupSphereMesh();
     }
 

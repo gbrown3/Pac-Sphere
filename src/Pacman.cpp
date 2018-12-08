@@ -40,7 +40,7 @@ namespace pacsphere {
 
         // Initialize mesh with joints
 
-        _mesh.reset(new Sphere(position, PAC_RADIUS, PAC_COLOR, nullptr, newJoints));
+        _mesh.reset(new Sphere(position, PAC_RADIUS, PAC_COLOR, "", newJoints));
     }
     
     void Pacman::draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix) {
