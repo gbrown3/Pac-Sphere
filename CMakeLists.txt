@@ -57,7 +57,7 @@ set(header_files
 
 set(extra_files
   README.md
-        src/Hashtable.h)
+        )
 
 set_source_files_properties(${extra_files} PROPERTIES HEADER_FILE_ONLY TRUE)
 

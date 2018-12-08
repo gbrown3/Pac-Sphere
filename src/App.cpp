@@ -266,13 +266,15 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 
 bool App::pacmanColliding(mat4 rotation) {
 	vec4 pos = rotation * vec4(0, 0, MAZE_RADIUS, 1.0);
-	maze->getTexturePosition(pos);
+	vec2 texCoord = maze->getTexturePosition(pos);
+    
+    cout << "Collision tex coord: " << to_string(texCoord) << endl;
 
     if (maze->_image == nullptr) {
         cout << "hi2" << endl;
     }
     else {
-        cout << (int)(maze->_image[0]) << endl;
+        cout << (int)(maze->_image[10]) << endl;
     }
 
 	return false;
