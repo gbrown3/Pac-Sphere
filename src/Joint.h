@@ -38,6 +38,9 @@ namespace pacsphere {
         // Draws basicgraphics sphere to show precisely where the joint is
         void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
         
+        // The joint's rotation. Should be updated when joint rotates in an animation, and is used for shader vertex skinning calculations
+        glm::mat4 _rotation = mat4(1.0);
+        
     private:
         
         std::shared_ptr<pacsphere::Joint> _parentJoint;

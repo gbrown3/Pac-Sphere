@@ -23,8 +23,16 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     
     dir = vec3(0.0);
     mazeFrame = mat4(1.0);
+
+    //mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
+    //pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)) * rotation;
     pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     
+    inkyFrame = rotate(mat4(1.0), radians(90.0f), vec3(1, 0, 0));
+    pinkyFrame = rotate(mat4(1.0), radians(180.0f), vec3(1, 0, 0));
+    blinkyFrame = rotate(mat4(1.0), radians(45.0f), vec3(1, 0, 0));
+    clydeFrame = rotate(mat4(1.0), radians(-90.0f), vec3(1, 0, 0));
+
     mazeY = vec3(0, 1, 0);
     dirXFlipped = false;
 }
@@ -55,24 +63,54 @@ void App::onButtonDown(const VRButtonEvent &event) {
     string name = event.getName();
     
     if (name == "KbdUp_Down") {
+
+        // Update maze rotation direction
         dir = vec3(0,-MOVEMENT_SPEED,0);
+
+        // Orient pacman
+        pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     }
     else if (name == "KbdDown_Down") {
+
+        // Update maze rotation direction
         dir = vec3(0,MOVEMENT_SPEED,0);
+
+        // Orient pacman
+        mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
+        mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
+
+        pacFrame = startingTransform * rotation;
     }
     else if (name == "KbdLeft_Down") {
+
+        // Update maze rotation direction
         dir = vec3(MOVEMENT_SPEED,0,0);
         dirXFlipped = false;
+
+        // Orient pacman
+        mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
+        mat4 rotation = rotate(mat4(1), radians(90.0f), vec3(0, 0, 1));
+
+        pacFrame = startingTransform * rotation;
     }
     else if (name == "KbdRight_Down") {
+
+        // Update maze rotation direction
         dir = vec3(-MOVEMENT_SPEED,0,0);
         dirXFlipped = false;
+
+        // Orient pacman
+        mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
+        mat4 rotation = rotate(mat4(1), radians(-90.0f), vec3(0, 0, 1));
+
+        pacFrame = startingTransform * rotation; //startingTransform * rotation; //startingTransform * rotation;
     }
     
-    // If the ball rolls off the screen, you can press SPACEBAR to reset its position
+    // Reset maze rotation
     else if (name == "KbdSpace_Down") {
         dir = vec3(0,0,0);
         mazeFrame = mat4(1.0);
+        pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     }
 
     // Enable zooming in and out
@@ -85,6 +123,30 @@ void App::onButtonDown(const VRButtonEvent &event) {
         cameraOffset += vec3(0, 0, ZOOM_INCREMENT);
     }
 
+    // Enable/Disable joint animation
+    else if (name == "KbdJ_Down") {
+
+        useJointAnimations = !useJointAnimations;
+    }
+
+    // Switch between maze sphere and test sphere
+    else if (name == "KbdM_Down") {
+
+        renderTestSphere = false;
+    }
+    else if (name == "KbdT_Down") {
+
+        renderTestSphere = true;
+    }
+
+    // Enable/disable maze walls
+    else if (name == "KbdW_Down") {
+
+        renderMazeWalls = !renderMazeWalls;
+    }
+
+
+    cout << "Button presed: " << name << endl << endl;
 }
 
 void App::onButtonUp(const VRButtonEvent &event) {
@@ -147,43 +209,19 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		// This load shaders from disk, we do it once when the program starts up.
 		reloadShaders();
 
-
         // Setup maze
-		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), MAZE_TEXTURE_PATH));
-        
-        test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1)));
+        maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), MAZE_TEXTURE_PATH));
+
+        test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(0.1, 0.1, 1, 1)));
+        test_cylinder.reset(new basicgraphics::Cylinder(vec3(0), vec3(0, 10, 0), 1.0f, vec4(0, 1, 0, 1)));
 
 
 
-        // Set up Pacman and joints for animation
-        //pacman.reset(new pacsphere::Pacman(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)));
+        // Set up Pacman
         pacman.reset(new pacsphere::Pacman(vec3(0, 0, 0)));
-
-        // Make the joints
-        vector<shared_ptr<pacsphere::Joint>> newJoints = vector<shared_ptr<pacsphere::Joint>>();
         
-        // NOTE: each joint is in pacman model space, so origin is at center of pacman sphere
-        // RED
-        Joint* centerJointPtr = new Joint(vec3(0, 0, 0), vec4(1, 0, 0, 1));
-        shared_ptr<Joint> centerJoint(centerJointPtr);
 
-        // GREEN
-        Joint* rightLipPtr = new Joint(vec3(0, PAC_RADIUS, 0), vec4(0, 1, 0, 1));
-        shared_ptr<Joint> rightLip(rightLipPtr);
-
-        // BLUE
-        Joint* leftLipPtr = new Joint(vec3(0, PAC_RADIUS, 0), vec4(0, 0, 1, 1));
-        shared_ptr<Joint> leftLip(leftLipPtr);
-
-        newJoints.push_back(centerJoint);
-        newJoints.push_back(rightLip);
-        newJoints.push_back(leftLip);
-
-        // Add them to pacman's mesh
-        pacman->_mesh->_mesh->defineJoints(newJoints);
-
-
-
+        
         // Setup the ghosts
         inky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::INKY));
         pinky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::PINKY));
@@ -221,9 +259,6 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 
     // Animate pacman
     pacman->animate(_curFrameTime * 1000);
-
-
-//    cout << "lastTime: " << _lastTime << endl << "_curFrameTime" << _curFrameTime << endl;
 }
 
 bool App::pacmanColliding(mat4 rotation) {
@@ -265,17 +300,21 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	
 	_shader.setUniform("view_mat", view);
 	_shader.setUniform("projection_mat", projection);
-	
-	_shader.setUniform("model_mat", model);
-	_shader.setUniform("normal_mat", mat3(transpose(inverse(model))));
 	_shader.setUniform("eye_world", eye_world);
     
     _shader.setUniform("model_mat", mazeFrame);
     _shader.setUniform("normal_mat", mat3(transpose(inverse(mazeFrame))));
 
-    // Draw maze sphere
-    //maze->draw(_shader, mazeFrame);
-//    test_sphere->draw(_shader, mazeFrame);
+
+    test_cylinder->draw(_shader, pacFrame * translate(mat4(1), vec3(0, PAC_RADIUS, 0)));
+
+    // Draw maze sphere (or test sphere)
+    if (renderTestSphere) {
+        test_sphere->draw(_shader, mazeFrame);
+    }
+    else {
+        maze->draw(_shader, mazeFrame);
+    }
 
 	_mazeShader.use();
 	_mazeShader.setUniform("mazeHeight", 2.0f);
@@ -284,17 +323,58 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 	_mazeShader.setUniform("model_mat", model);
 
     // Draw 3D maze walls
-    maze->draw(_mazeShader, mazeFrame);
+    if (renderMazeWalls) {
+
+        maze->draw(_mazeShader, mazeFrame);
+    }
 
 
-    // Draw pacman and ghosts
-    _shader.use();
-    pacman->_mesh->_mesh->drawJoints(_shader, pacFrame);
+    // Draw pacman
+    _pacShader.use();
 
-    //inky->draw(_ghostShader, model);
-    //pinky->draw(_ghostShader, model);
-    //blinky->draw(_ghostShader, model);
-    //clyde->draw(_ghostShader, model);
+    _pacShader.setUniform("view_mat", view);
+    _pacShader.setUniform("projection_mat", projection);
+
+    _pacShader.setUniform("model_mat", model);
+    _pacShader.setUniform("normal_mat", mat3(transpose(inverse(pacFrame))));
+    _pacShader.setUniform("eye_world", eye_world);
+
+    vector<shared_ptr<Joint>> joints = pacman->_mesh->getJoints();
+    _pacShader.setUniform("centerJointRotation", joints[0]->_rotation);
+    _pacShader.setUniform("rightJointRotation", joints[1]->_rotation);
+    _pacShader.setUniform("leftJointRotation", joints[2]->_rotation);
+
+    _pacShader.setUniform("useJoints", useJointAnimations);
+
+//    cout << "centerJointRotation: " << to_string(joints[0]->_rotation) << endl;
+//    cout << "rightJointRotation: " << to_string(joints[1]->_rotation) << endl;
+//    cout << "leftJointRotation: " << to_string(joints[2]->_rotation) << endl;
+//
+
+    pacman->draw(_pacShader, pacFrame);
+    pacman->_mesh->drawJoints(_pacShader, pacFrame);
+
+    // Draw ghosts
+    _ghostShader.use();
+    _ghostShader.setUniform("view_mat", view);
+    _ghostShader.setUniform("projection_mat", projection);
+    _ghostShader.setUniform("eye_world", eye_world);
+
+    _ghostShader.setUniform("model_mat", inkyFrame);
+    _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(inkyFrame))));
+    inky->draw(_ghostShader, mazeFrame * inkyFrame);
+
+    _ghostShader.setUniform("model_mat", pinkyFrame);
+    _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(pinkyFrame))));
+    pinky->draw(_ghostShader, mazeFrame * pinkyFrame);
+
+    _ghostShader.setUniform("model_mat", blinkyFrame);
+    _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(blinkyFrame))));
+    blinky->draw(_ghostShader, mazeFrame * blinkyFrame);
+
+    _ghostShader.setUniform("model_mat", clydeFrame);
+    _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(clydeFrame))));
+    clyde->draw(_ghostShader, mazeFrame * clydeFrame);
 }
 
 void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {
@@ -327,6 +407,10 @@ void App::reloadShaders()
 	_shader.compileShader("texture.vert", GLSLShader::VERTEX);
 	_shader.compileShader("texture.frag", GLSLShader::FRAGMENT);
 	_shader.link();
+
+    _pacShader.compileShader("shaders/pacman.vert", GLSLShader::VERTEX);
+    _pacShader.compileShader("shaders/pacman.frag", GLSLShader::FRAGMENT);
+    _pacShader.link();
 
     _mazeShader.compileShader("shaders/maze.vert", GLSLShader::VERTEX);
     _mazeShader.compileShader("shaders/maze.geom", GLSLShader::GEOMETRY);
