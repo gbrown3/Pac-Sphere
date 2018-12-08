@@ -79,6 +79,7 @@ private:
     std::unique_ptr<pacsphere::Ghost> clyde;
     
     std::unique_ptr<basicgraphics::Sphere> test_sphere;
+    std::unique_ptr<basicgraphics::Cylinder> test_cylinder;
     
     glm::vec3 cameraOffset = glm::vec3(0, 0, 60);  // direction to move camera from center of maze
     

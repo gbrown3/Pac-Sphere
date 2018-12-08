@@ -24,8 +24,9 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     dir = vec3(0.0);
     mazeFrame = mat4(1.0);
     
-    mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
-    pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)) * rotation;
+    //mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
+    //pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)) * rotation;
+    pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     
     inkyFrame = rotate(mat4(1.0), radians(90.0f), vec3(1, 0, 0));
     pinkyFrame = rotate(mat4(1.0), radians(180.0f), vec3(1, 0, 0));
@@ -75,12 +76,10 @@ void App::onButtonDown(const VRButtonEvent &event) {
         dir = vec3(0,MOVEMENT_SPEED,0);
         
         // Orient pacman
-        
-        
         mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
-        mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1)) * startingTransform;
+        mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
         
-        //pacFrame = startingTransform * rotation;
+        pacFrame = startingTransform * rotation;
     }
     else if (name == "KbdLeft_Down") {
         
@@ -90,9 +89,9 @@ void App::onButtonDown(const VRButtonEvent &event) {
         
         // Orient pacman
         mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
-        mat4 rotation = rotate(mat4(1), radians(90.0f), vec3(0, 0, 1)) * startingTransform;
+        mat4 rotation = rotate(mat4(1), radians(90.0f), vec3(0, 0, 1));
         
-        //pacFrame = rotation * startingTransform;
+        pacFrame = startingTransform * rotation;
     }
     else if (name == "KbdRight_Down") {
         
@@ -101,24 +100,17 @@ void App::onButtonDown(const VRButtonEvent &event) {
         dirXFlipped = false;
         
         // Orient pacman
-        vec3 pacPos = vec3(column(pacFrame, 3));
+        mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
+        mat4 rotation = rotate(mat4(1), radians(-90.0f), vec3(0, 0, 1));
         
-        mat4 moveToOrigin = translate(mat4(1), -pacPos);
-        mat4 rotation = rotate(mat4(1), radians(90.0f), vec3(0, 0, 1));
-        mat4 moveBack = translate(mat4(1), pacPos);;
-        
-        
-        cout << "pacframe before rotation: " << endl << to_string(pacFrame) << endl;
-        
-        //pacFrame = moveBack * rotation * moveToOrigin * pacFrame;
-        
-        cout << "pacframe after rotation: " << endl << to_string(pacFrame) << endl;
+        pacFrame = startingTransform * rotation; //startingTransform * rotation; //startingTransform * rotation;
     }
     
-    // If the ball rolls off the screen, you can press SPACEBAR to reset its position
+    // Reset maze rotation
     else if (name == "KbdSpace_Down") {
         dir = vec3(0,0,0);
         mazeFrame = mat4(1.0);
+        pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     }
     
     // Enable zooming in and out
@@ -225,6 +217,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
         
         test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(0.1, 0.1, 1, 1)));
+        test_cylinder.reset(new basicgraphics::Cylinder(vec3(0), vec3(0, 10, 0), 1.0f, vec4(0, 1, 0, 1)));
         
         
         
@@ -304,6 +297,9 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     
     _shader.setUniform("model_mat", mazeFrame);
     _shader.setUniform("normal_mat", mat3(transpose(inverse(mazeFrame))));
+    
+    
+    test_cylinder->draw(_shader, pacFrame * translate(mat4(1), vec3(0, PAC_RADIUS, 0)));
 
     // Draw maze sphere (or test sphere)
     if (renderTestSphere) {

@@ -64,8 +64,8 @@ namespace pacsphere {
             rightLipAngle = M_PI/2 - angleDifference;
             leftLipAngle = M_PI/2 + angleDifference;
             
-            joints[1]->_rotation = rotate(mat4(1.0), -angleDifference, vec3(0, 0, 1)) * joints[1]->_rotation;
-            joints[2]->_rotation = rotate(mat4(1.0), angleDifference, vec3(0, 0, 1)) * joints[2]->_rotation;
+            joints[1]->_rotation = rotate(mat4(1.0), -angleDifference, vec3(0, 0, 1)); //* joints[1]->_rotation;
+            joints[2]->_rotation = rotate(mat4(1.0), angleDifference, vec3(0, 0, 1)); //* joints[2]->_rotation;
             
         }
         // If closing mouth
@@ -76,8 +76,8 @@ namespace pacsphere {
             rightLipAngle = (M_PI/2 - MAX_ANGLE_DIFFERENCE) + angleDifference;
             leftLipAngle = (M_PI/2 + MAX_ANGLE_DIFFERENCE) - angleDifference;
             
-            joints[1]->_rotation = rotate(mat4(1.0), angleDifference, vec3(0, 0, 1)) * joints[1]->_rotation;
-            joints[2]->_rotation = rotate(mat4(1.0), -angleDifference, vec3(0, 0, 1)) * joints[2]->_rotation;
+            joints[1]->_rotation = rotate(mat4(1.0), angleDifference, vec3(0, 0, 1)); //* joints[1]->_rotation;
+            joints[2]->_rotation = rotate(mat4(1.0), -angleDifference, vec3(0, 0, 1)); //* joints[2]->_rotation;
             
         }
     
