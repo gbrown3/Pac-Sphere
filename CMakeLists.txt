@@ -42,7 +42,7 @@ set(source_files
   src/Joint.cpp
   src/AnimatedMesh.cpp
   src/AnimatedModel.cpp
-)
+        )
 
 set(header_files
   src/App.h
@@ -53,11 +53,11 @@ set(header_files
   src/Joint.h
   src/AnimatedMesh.h
   src/AnimatedModel.h
-)
+        )
 
 set(extra_files
   README.md
-)
+        src/Hashtable.h)
 
 set_source_files_properties(${extra_files} PROPERTIES HEADER_FILE_ONLY TRUE)
 

@@ -23,14 +23,14 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     
     dir = vec3(0.0);
     mazeFrame = mat4(1.0);
-    
+
     pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     
     inkyFrame = rotate(mat4(1.0), radians(90.0f), vec3(1, 0, 0));
     pinkyFrame = rotate(mat4(1.0), radians(180.0f), vec3(1, 0, 0));
     blinkyFrame = rotate(mat4(1.0), radians(45.0f), vec3(1, 0, 0));
     clydeFrame = rotate(mat4(1.0), radians(-90.0f), vec3(1, 0, 0));
-    
+
     mazeY = vec3(0, 1, 0);
     dirXFlipped = false;
 }
@@ -136,12 +136,12 @@ void App::onButtonDown(const VRButtonEvent &event) {
         
         renderTestSphere = true;
     }
-    
+
     // Toggle rendering cylinder that indicates which direction pacman is facing
     else if (name == "KbdC_Down") {
         renderTestCylinder = !renderTestCylinder;
     }
-    
+
     // Enable/disable maze walls
     else if (name == "KbdW_Down") {
         
@@ -212,13 +212,9 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 		// This load shaders from disk, we do it once when the program starts up.
 		reloadShaders();
 
-		//initializeText();
-		shared_ptr<Texture> tex2 = Texture::create2DTextureFromFile(MAZE_TEXTURE_PATH);
-        
-        
         // Setup maze
-		maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), tex2));
-        
+        maze.reset(new pacsphere::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 0, 0, 1), MAZE_TEXTURE_PATH));
+
         test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(1, 1, 1, 1)));
         test_cylinder.reset(new basicgraphics::Cylinder(vec3(0), vec3(0, 10, 0), 1.0f, vec4(0, 1, 0, 1)));
         
@@ -227,7 +223,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         // Set up Pacman
         pacman.reset(new pacsphere::Pacman(vec3(0, 0, 0)));
         
-        
+
         
         // Setup the ghosts
         inky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::INKY));
@@ -235,24 +231,19 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         blinky.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::BLINKY));
         clyde.reset(new pacsphere::Ghost(vec3(0, 0, MAZE_RADIUS + PAC_RADIUS), pacsphere::CLYDE));
     }
-    
-    
-    
+
     // Rotate maze
     vec3 rotationAxis = cross(dir, vec3(0, 0, 1));
-    
+    float rotationAngle = radians(-MOVEMENT_SPEED);
+    mat4 rotation;
+
     if (rotationAxis != vec3(0, 0, 0)) {
-        
-        float rotationAngle = radians(-MOVEMENT_SPEED);
-        
         if (abs(dir.x) > 0) {
             if (dir.x > 0) {
                 rotationAxis = -mazeY;
-                //rotationAngle = -rotationAngle;
             }
             else {
                 rotationAxis = mazeY;
-                //rotationAngle = -rotationAngle;
             }
         }
         
@@ -260,16 +251,32 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
             dir.x = -dir.x;
             dirXFlipped = true;
         }
-        
-        mat4 rotation = rotate(mat4(1.0), rotationAngle * dir.length(), rotationAxis);
-        mazeFrame = rotation * mazeFrame;
-        mazeY = vec3(rotation * vec4(mazeY, 0));
-        
+
+        rotation = rotate(mat4(1.0), rotationAngle * dir.length(), rotationAxis);
+        if (!pacmanColliding(rotation)) {
+            mazeFrame = rotation * mazeFrame;
+            mazeY = vec3(rotation * vec4(mazeY, 0));
+        }
     }
-    
+
+
     // Animate pacman
     pacman->animate(_curFrameTime * 1000);
 }
+
+bool App::pacmanColliding(mat4 rotation) {
+	vec4 pos = rotation * vec4(0, 0, MAZE_RADIUS, 1.0);
+	maze->getTexturePosition(pos);
+
+    if (maze->_image == nullptr) {
+        cout << "hi2" << endl;
+    }
+    else {
+        cout << (int)(maze->_image[0]) << endl;
+    }
+
+	return false;
+};
 
 void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     // This routine is called once per eye/camera.  This is the place to actually

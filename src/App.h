@@ -95,12 +95,14 @@ private:
     
     vec3 mazeY;
     bool dirXFlipped;
-    
+
+    bool pacmanColliding(mat4 rotation);
+
     bool useJointAnimations = false;
     bool renderMazeWalls = true;
     bool renderTestSphere = false;
     bool renderTestCylinder = false;
-    
+
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;
     basicgraphics::GLSLProgram _pacShader;
