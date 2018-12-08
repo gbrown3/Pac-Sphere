@@ -28,8 +28,8 @@ namespace pacsphere {
         if (_texturePath != "") {
             shared_ptr<Texture> texture = Texture::create2DTextureFromFile(_texturePath);
 
-            int width, height, channels;
-            _image = SOIL_load_image(_texturePath.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+            //int width, height, channels;
+            _image = SOIL_load_image(_texturePath.c_str(), &imageWidth, &imageHeight, &imageChannels, SOIL_LOAD_AUTO);
 
             if (texture) {
                 textures.push_back(texture);
@@ -143,6 +143,10 @@ namespace pacsphere {
             vec3 match = glm::epsilonEqual(vertexPos, pair.position, 0.01f);
             
             if (match.x && match.y && match.z){
+                
+                cout << "textcoord: " << to_string(pair.texCoord) << endl;
+                cout << "X matches: " << match.x << endl << "Y Matches: " << match.y << endl << "Z matches: " << match.z << endl;
+                
                 return pair.texCoord;
             }
         }

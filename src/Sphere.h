@@ -40,7 +40,12 @@ namespace pacsphere {
         std::vector<std::shared_ptr<Joint>> getJoints() { return _joints; };
 
         std::unique_ptr<AnimatedMesh> _mesh;
+        
         unsigned char * _image = new unsigned char[100000];
+        int imageWidth;
+        int imageHeight;
+        int imageChannels;
+        
         vec2 getTexturePosition(vec3 vertexPos);
 
     protected:
