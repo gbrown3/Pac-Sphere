@@ -99,6 +99,7 @@ private:
     bool useJointAnimations = false;
     bool renderMazeWalls = true;
     bool renderTestSphere = false;
+    bool renderTestCylinder = false;
     
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;

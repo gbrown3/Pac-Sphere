@@ -46,6 +46,6 @@ namespace pacsphere {
         //cout << "Joint pos at draw time: " << to_string(_localPosition) << endl;
         
         mat4 translateToLocalPos = glm::translate(mat4(1), _localPosition);
-        _jointSphere->draw(shader, translateToLocalPos * modelMatrix);
+        _jointSphere->draw(shader, modelMatrix * translateToLocalPos);
     }
 }

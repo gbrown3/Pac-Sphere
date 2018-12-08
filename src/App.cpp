@@ -24,8 +24,6 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     dir = vec3(0.0);
     mazeFrame = mat4(1.0);
     
-    //mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
-    //pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)) * rotation;
     pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     
     inkyFrame = rotate(mat4(1.0), radians(90.0f), vec3(1, 0, 0));
@@ -137,6 +135,11 @@ void App::onButtonDown(const VRButtonEvent &event) {
     else if (name == "KbdT_Down") {
         
         renderTestSphere = true;
+    }
+    
+    // Toggle rendering cylinder that indicates which direction pacman is facing
+    else if (name == "KbdC_Down") {
+        renderTestCylinder = !renderTestCylinder;
     }
     
     // Enable/disable maze walls
@@ -299,7 +302,10 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     _shader.setUniform("normal_mat", mat3(transpose(inverse(mazeFrame))));
     
     
-    test_cylinder->draw(_shader, pacFrame * translate(mat4(1), vec3(0, PAC_RADIUS, 0)));
+    // Draw cylinder indicating which direction pacman is facing
+    if (renderTestCylinder) {
+        test_cylinder->draw(_shader, pacFrame * translate(mat4(1), vec3(0, PAC_RADIUS, 0)));
+    }
 
     // Draw maze sphere (or test sphere)
     if (renderTestSphere) {
