@@ -30,16 +30,16 @@ namespace pacsphere {
         // Right lip movement: (0, PAC_RADIUS, 0) -> (cos(M_PI/4), sin(M_PI/4), 0)
         // Left lip movement: (0, PAC_RADIUS, 0) -> (cos(M_PI*3/4), sin(M_PI*3/4), 0)
         
-        cout << "currentFrameTime: " << currentFrameTime << endl;
-        cout << "Animation length: " << ANIMATION_LENGTH << endl << endl;
+//        cout << "currentFrameTime: " << currentFrameTime << endl;
+//        cout << "Animation length: " << ANIMATION_LENGTH << endl << endl;
         
         int mod = (int)currentFrameTime % ANIMATION_LENGTH;
         
-        cout << "currentFrameTime % Animationlength: " << mod << endl << endl;;
+//        cout << "currentFrameTime % Animationlength: " << mod << endl << endl;;
         
         float overeallAnimationProgress = ((float)((int)currentFrameTime % ANIMATION_LENGTH))/ANIMATION_LENGTH;
         
-        cout << "Animation progress: " << overeallAnimationProgress << endl;
+//        cout << "Animation progress: " << overeallAnimationProgress << endl;
         
         // 0-0.5*AnimationTime -> opening mouth
         // 0.5*AnimationTime-AnimationTime -> closing mouth
@@ -70,8 +70,8 @@ namespace pacsphere {
         vec3 newLeftLipPos = vec3(cos(leftLipAngle), sin(leftLipAngle), 0);
         vec3 newRightLipPos = vec3(cos(rightLipAngle), sin(rightLipAngle), 0);
         
-        cout << "New left lip pos: " << to_string(newLeftLipPos) << endl;
-        cout << "New right lip pos: " << to_string(newRightLipPos) << endl;
+//        cout << "New left lip pos: " << to_string(newLeftLipPos) << endl;
+//        cout << "New right lip pos: " << to_string(newRightLipPos) << endl;
         
         // Assume rightLip is index 1, left is index 2
         joints[1]->_localPosition = newRightLipPos;

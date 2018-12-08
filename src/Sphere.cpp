@@ -4,14 +4,17 @@
 
 #define M_PI       3.14159265358979323846   // pi
 
+#include <SOIL.h>
 #include "Sphere.h"
+#include "Hashtable.h"
 
 using namespace std;
 using namespace basicgraphics;
 
 namespace pacsphere {
-    Sphere::Sphere(const glm::vec3 &position, const float radius, const glm::vec4 &color, const shared_ptr<Texture> texture) :
-    _position(position), _radius(radius), _color(color), _texture(texture) {
+
+    Sphere::Sphere(const glm::vec3 &position, const float radius, const glm::vec4 &color, const string texturePath) :
+    _position(position), _radius(radius), _color(color), _texturePath(texturePath) {
         setupSphereMesh();
     }
 
@@ -22,8 +25,16 @@ namespace pacsphere {
         vector<int> cpuIndexArray = vector<int>();
 
         vector<shared_ptr<Texture>> textures = vector<shared_ptr<Texture>>();
-        if (_texture) {
-            textures.push_back(_texture);
+
+        if (_texturePath != "") {
+            shared_ptr<Texture> texture = Texture::create2DTextureFromFile(_texturePath);
+
+            int width, height, channels;
+            _image = SOIL_load_image(_texturePath.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+
+            if (texture) {
+                textures.push_back(texture);
+            }
         }
 
         float stackAngle = M_PI/STACKS;
@@ -51,7 +62,7 @@ namespace pacsphere {
                 vec2 texturePos = vec2(-j/float(SLICES) + 0.5, i/float(STACKS));
                 currentVertex = { vertexPos, normalize(vertexPos), texturePos};
                 cpuVertexArray.push_back(currentVertex);
-                vertexMap[vertexPos] = texturePos;
+//                vertexMap[vertexPos] = texturePos;
 
                 // Bottom vertex
                 xCoord = _radius*cos(angle)*bottomStackLength;
@@ -60,7 +71,7 @@ namespace pacsphere {
                 texturePos = vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS));
                 currentVertex = { vertexPos, normalize(vertexPos), texturePos};
                 cpuVertexArray.push_back(currentVertex);
-                vertexMap[vertexPos] = texturePos;
+//                vertexMap[vertexPos] = texturePos;
             }
 
             for (int j = totalVertices; j < totalVertices + SLICES*2 + 1; j+=2 ) {
@@ -79,7 +90,7 @@ namespace pacsphere {
     }
 
     vec2 Sphere::getTexturePosition(vec3 vertexPos) {
-        return vertexMap[vertexPos];
+//        return vertexMap[vertexPos];
     }
 
     void Sphere::draw(GLSLProgram &shader, const glm::mat4 &modelMatrix) {

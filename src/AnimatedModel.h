@@ -25,7 +25,6 @@
 #include <glm/glm.hpp>
 #include <mutex>
 #include "Mesh.h"
-#include "Texture.h"
 #include "GLSLProgram.h"
 
 #include "AnimatedMesh.h"

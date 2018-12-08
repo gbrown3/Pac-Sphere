@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include <BasicGraphics.h>
-#include "Texture.h"
 #include "Mesh.h"
 #include "Joint.h"
 
