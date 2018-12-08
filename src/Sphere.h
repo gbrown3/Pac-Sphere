@@ -13,6 +13,13 @@ using namespace basicgraphics;
 namespace pacsphere {
     class Sphere {
     public:
+        
+        struct PositionTexPair {
+            glm::vec3 position;
+            glm::vec2 texCoord;
+        };
+        
+        
         Sphere(const glm::vec3 &position, float radius, const glm::vec4 &color, const std::string texture = "", std::vector<std::shared_ptr<Joint>> joints = std::vector<std::shared_ptr<Joint>>());
         ~Sphere(){};
         void setupSphereMesh();
@@ -42,7 +49,7 @@ namespace pacsphere {
         const glm::vec4 _color;
         std::vector<std::shared_ptr<Joint>> _joints;
         const string _texturePath;
-//        std::array<std::array<vec3>> vertexMap;
+        std::vector<PositionTexPair> vertexMap; // Master list of the texture coordinate corresponding with each vertex position
     };
 }
 

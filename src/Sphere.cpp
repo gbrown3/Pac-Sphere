@@ -6,6 +6,7 @@
 
 #include <SOIL.h>
 #include "Sphere.h"
+#include "glm/gtc/epsilon.hpp"
 
 using namespace std;
 using namespace basicgraphics;
@@ -83,7 +84,7 @@ namespace pacsphere {
                 vec2 texturePos = vec2(-j/float(SLICES) + 0.5, i/float(STACKS));
                 currentVertex = { vertexPos, normalize(vertexPos), texturePos, weights};
                 cpuVertexArray.push_back(currentVertex);
-//                vertexMap[vertexPos] = texturePos;
+                vertexMap.push_back(PositionTexPair{ vertexPos, texturePos});   // store position/texcoord pairing to help with collision
 
                 // Bottom vertex
                 xCoord = _radius*cos(angle)*bottomStackLength;
@@ -115,9 +116,10 @@ namespace pacsphere {
                 texturePos = vec2(-j/float(SLICES) + 0.5, (i+1)/float(STACKS));
                 currentVertex = { vertexPos, normalize(vertexPos), texturePos, weights};
                 cpuVertexArray.push_back(currentVertex);
-//                vertexMap[vertexPos] = texturePos;
+                vertexMap.push_back(PositionTexPair{ vertexPos, texturePos});   // store position/texcoord pairing to help with collision
             }
 
+            
             for (int j = totalVertices; j < totalVertices + SLICES*2 + 1; j+=2 ) {
                 cpuIndexArray.push_back(j + 1); // bottom
                 cpuIndexArray.push_back(j);  // top
@@ -134,7 +136,16 @@ namespace pacsphere {
     }
 
     vec2 Sphere::getTexturePosition(vec3 vertexPos) {
-//        return vertexMap[vertexPos];
+        
+        for(PositionTexPair pair : vertexMap) {
+            
+            // Determine if x, y, and z are within 0.01 of the given vertex position
+            vec3 match = glm::epsilonEqual(vertexPos, pair.position, 0.01f);
+            
+            if (match.x && match.y && match.z){
+                return pair.texCoord;
+            }
+        }
     }
 
     void Sphere::draw(GLSLProgram &shader, const glm::mat4 &modelMatrix) {
