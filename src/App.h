@@ -80,19 +80,19 @@ private:
     
     std::unique_ptr<basicgraphics::Sphere> test_sphere;
     std::unique_ptr<basicgraphics::Cylinder> test_cylinder;
-
+    
     glm::vec3 cameraOffset = glm::vec3(0, 0, 60);  // direction to move camera from center of maze
     
     glm::vec3 dir;
     glm::mat4 mazeFrame;
-
+    
     glm::mat4 pacFrame;
     
     glm::mat4 inkyFrame;
     glm::mat4 pinkyFrame;
     glm::mat4 blinkyFrame;
     glm::mat4 clydeFrame;
-
+    
     vec3 mazeY;
     bool dirXFlipped;
 
@@ -101,6 +101,7 @@ private:
     bool useJointAnimations = false;
     bool renderMazeWalls = true;
     bool renderTestSphere = false;
+    bool renderTestCylinder = false;
 
     virtual void reloadShaders();
     basicgraphics::GLSLProgram _shader;

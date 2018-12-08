@@ -24,8 +24,6 @@ App::App(int argc, char** argv) : VRApp(argc, argv)
     dir = vec3(0.0);
     mazeFrame = mat4(1.0);
 
-    //mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
-    //pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS)) * rotation;
     pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     
     inkyFrame = rotate(mat4(1.0), radians(90.0f), vec3(1, 0, 0));
@@ -63,46 +61,46 @@ void App::onButtonDown(const VRButtonEvent &event) {
     string name = event.getName();
     
     if (name == "KbdUp_Down") {
-
+        
         // Update maze rotation direction
         dir = vec3(0,-MOVEMENT_SPEED,0);
-
+        
         // Orient pacman
         pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     }
     else if (name == "KbdDown_Down") {
-
+        
         // Update maze rotation direction
         dir = vec3(0,MOVEMENT_SPEED,0);
-
+        
         // Orient pacman
         mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
         mat4 rotation = rotate(mat4(1), radians(180.0f), vec3(0, 0, 1));
-
+        
         pacFrame = startingTransform * rotation;
     }
     else if (name == "KbdLeft_Down") {
-
+        
         // Update maze rotation direction
         dir = vec3(MOVEMENT_SPEED,0,0);
         dirXFlipped = false;
-
+        
         // Orient pacman
         mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
         mat4 rotation = rotate(mat4(1), radians(90.0f), vec3(0, 0, 1));
-
+        
         pacFrame = startingTransform * rotation;
     }
     else if (name == "KbdRight_Down") {
-
+        
         // Update maze rotation direction
         dir = vec3(-MOVEMENT_SPEED,0,0);
         dirXFlipped = false;
-
+        
         // Orient pacman
         mat4 startingTransform = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
         mat4 rotation = rotate(mat4(1), radians(-90.0f), vec3(0, 0, 1));
-
+        
         pacFrame = startingTransform * rotation; //startingTransform * rotation; //startingTransform * rotation;
     }
     
@@ -112,40 +110,45 @@ void App::onButtonDown(const VRButtonEvent &event) {
         mazeFrame = mat4(1.0);
         pacFrame = translate(mat4(1), vec3(0, 0, MAZE_RADIUS + PAC_RADIUS));
     }
-
+    
     // Enable zooming in and out
     else if (name == "KbdEqual_Down") {
-
+        
         cameraOffset += vec3(0, 0, -ZOOM_INCREMENT);
     }
     else if (name == "KbdMinus_Down") {
-
+        
         cameraOffset += vec3(0, 0, ZOOM_INCREMENT);
     }
-
+    
     // Enable/Disable joint animation
     else if (name == "KbdJ_Down") {
-
+        
         useJointAnimations = !useJointAnimations;
     }
-
+    
     // Switch between maze sphere and test sphere
     else if (name == "KbdM_Down") {
-
+        
         renderTestSphere = false;
     }
     else if (name == "KbdT_Down") {
-
+        
         renderTestSphere = true;
+    }
+
+    // Toggle rendering cylinder that indicates which direction pacman is facing
+    else if (name == "KbdC_Down") {
+        renderTestCylinder = !renderTestCylinder;
     }
 
     // Enable/disable maze walls
     else if (name == "KbdW_Down") {
-
+        
         renderMazeWalls = !renderMazeWalls;
     }
 
-
+    
     cout << "Button presed: " << name << endl << endl;
 }
 
@@ -214,9 +217,9 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
 
         test_sphere.reset(new basicgraphics::Sphere(vec3(0), MAZE_RADIUS, vec4(0.1, 0.1, 1, 1)));
         test_cylinder.reset(new basicgraphics::Cylinder(vec3(0), vec3(0, 10, 0), 1.0f, vec4(0, 1, 0, 1)));
-
-
-
+        
+        
+        
         // Set up Pacman
         pacman.reset(new pacsphere::Pacman(vec3(0, 0, 0)));
         
@@ -304,9 +307,12 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     
     _shader.setUniform("model_mat", mazeFrame);
     _shader.setUniform("normal_mat", mat3(transpose(inverse(mazeFrame))));
-
-
-    test_cylinder->draw(_shader, pacFrame * translate(mat4(1), vec3(0, PAC_RADIUS, 0)));
+    
+    
+    // Draw cylinder indicating which direction pacman is facing
+    if (renderTestCylinder) {
+        test_cylinder->draw(_shader, pacFrame * translate(mat4(1), vec3(0, PAC_RADIUS, 0)));
+    }
 
     // Draw maze sphere (or test sphere)
     if (renderTestSphere) {
@@ -324,54 +330,54 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 
     // Draw 3D maze walls
     if (renderMazeWalls) {
-
+        
         maze->draw(_mazeShader, mazeFrame);
     }
-
-
+    
+    
     // Draw pacman
     _pacShader.use();
-
+    
     _pacShader.setUniform("view_mat", view);
     _pacShader.setUniform("projection_mat", projection);
-
+    
     _pacShader.setUniform("model_mat", model);
     _pacShader.setUniform("normal_mat", mat3(transpose(inverse(pacFrame))));
     _pacShader.setUniform("eye_world", eye_world);
-
+    
     vector<shared_ptr<Joint>> joints = pacman->_mesh->getJoints();
     _pacShader.setUniform("centerJointRotation", joints[0]->_rotation);
     _pacShader.setUniform("rightJointRotation", joints[1]->_rotation);
     _pacShader.setUniform("leftJointRotation", joints[2]->_rotation);
-
+    
     _pacShader.setUniform("useJoints", useJointAnimations);
-
+    
 //    cout << "centerJointRotation: " << to_string(joints[0]->_rotation) << endl;
 //    cout << "rightJointRotation: " << to_string(joints[1]->_rotation) << endl;
 //    cout << "leftJointRotation: " << to_string(joints[2]->_rotation) << endl;
 //
-
+    
     pacman->draw(_pacShader, pacFrame);
     pacman->_mesh->drawJoints(_pacShader, pacFrame);
-
+    
     // Draw ghosts
     _ghostShader.use();
     _ghostShader.setUniform("view_mat", view);
     _ghostShader.setUniform("projection_mat", projection);
     _ghostShader.setUniform("eye_world", eye_world);
-
+    
     _ghostShader.setUniform("model_mat", inkyFrame);
     _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(inkyFrame))));
     inky->draw(_ghostShader, mazeFrame * inkyFrame);
-
+    
     _ghostShader.setUniform("model_mat", pinkyFrame);
     _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(pinkyFrame))));
     pinky->draw(_ghostShader, mazeFrame * pinkyFrame);
-
+    
     _ghostShader.setUniform("model_mat", blinkyFrame);
     _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(blinkyFrame))));
     blinky->draw(_ghostShader, mazeFrame * blinkyFrame);
-
+    
     _ghostShader.setUniform("model_mat", clydeFrame);
     _ghostShader.setUniform("normal_mat", mat3(transpose(inverse(clydeFrame))));
     clyde->draw(_ghostShader, mazeFrame * clydeFrame);
@@ -407,7 +413,7 @@ void App::reloadShaders()
 	_shader.compileShader("texture.vert", GLSLShader::VERTEX);
 	_shader.compileShader("texture.frag", GLSLShader::FRAGMENT);
 	_shader.link();
-
+    
     _pacShader.compileShader("shaders/pacman.vert", GLSLShader::VERTEX);
     _pacShader.compileShader("shaders/pacman.frag", GLSLShader::FRAGMENT);
     _pacShader.link();
