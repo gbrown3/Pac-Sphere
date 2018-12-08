@@ -358,7 +358,8 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
 //
     
     pacman->draw(_pacShader, pacFrame);
-    pacman->_mesh->drawJoints(_pacShader, pacFrame);
+    _shader.use();
+    pacman->_mesh->drawJoints(_shader, pacFrame);
     
     // Draw ghosts
     _ghostShader.use();
