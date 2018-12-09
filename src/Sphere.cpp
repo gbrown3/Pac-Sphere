@@ -144,8 +144,8 @@ namespace pacsphere {
             
             if (match.x && match.y && match.z){
                 
-                cout << "textcoord: " << to_string(pair.texCoord) << endl;
-                cout << "X matches: " << match.x << endl << "Y Matches: " << match.y << endl << "Z matches: " << match.z << endl;
+//                cout << "textcoord: " << to_string(pair.texCoord) << endl;
+//                cout << "X matches: " << match.x << endl << "Y Matches: " << match.y << endl << "Z matches: " << match.z << endl;
                 
                 return pair.texCoord;
             }

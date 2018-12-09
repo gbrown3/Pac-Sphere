@@ -268,6 +268,10 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
  * Given the current rotation of the maze, returns true if pacman is in contact with one of the walls
  */
 bool App::pacmanColliding(mat4 rotation) {
+    
+    
+    return false;
+    
 	vec4 pos = rotation * vec4(0, 0, MAZE_RADIUS, 1.0);
 	vec2 texCoord = maze->getTexturePosition(pos);
     
@@ -280,9 +284,9 @@ bool App::pacmanColliding(mat4 rotation) {
     int height = maze->imageHeight;
     int numChannels = maze->imageChannels;
     
-    cout << "Image width: " << width << endl;
-    cout << "Image height: " << height << endl;
-    cout << "Num channels: " << numChannels << endl;
+//    cout << "Image width: " << width << endl;
+//    cout << "Image height: " << height << endl;
+//    cout << "Num channels: " << numChannels << endl;
     
     // Convert texture coords from 0-1 to row and column
     int row = texCoord.x * width;
@@ -304,9 +308,9 @@ bool App::pacmanColliding(mat4 rotation) {
     int G = (int) maze->_image[index + 1];
     int B = (int) maze->_image[index + 2];
     
-    cout << "R: " << R << endl;
-    cout << "G: " << G << endl;
-    cout << "B: " << B << endl;
+//    cout << "R: " << R << endl;
+//    cout << "G: " << G << endl;
+//    cout << "B: " << B << endl;
 
 	return R == 0 && G == 0 && B == 0;
 };
