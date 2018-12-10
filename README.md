@@ -31,7 +31,9 @@ You can toggle and swap between several different features. The key commands and
 - "J" = Toggle whether or not the joint positions affect the pacman mesh (skinning) 
 
 ## Design Decisions
-TODO: fill this in
+To create Pac-Sphere there were a lot of different decisions to be made due to the amount of details that the game must have. The first big decision we made was to recycle the Sphere class we created in the Earthquakes HW in order to tesselate the sphere with any maze. The amount of stacks and slices was a big question that at first we chose randomly based on how good it looked and how efficiently it performed. Later on, when displacement mapping was implemented, we found that if there were too few slices or stacks then some of the vertices would skip over a wall in the texture and they would not be taken into account by the displacement mapping geometry shader. 250 stacks and 350 slices was a perfect balance of efficiency and aesthetics while correctly drawing every single piece of the maze.
+
+When implementing the maze we decided that there we would be no real need to implement a fragment shader due to the walls being black and because all they really do is demark the limits for Pacman's and the ghosts' movements. 
 
 ## Project Structure
 
