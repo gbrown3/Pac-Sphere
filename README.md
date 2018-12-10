@@ -18,6 +18,18 @@ Make sure you've installed [BasicGraphics](https://github.com/mac-comp465-f18/ba
 
 In CMake, you should just need to configure the files once, then generate, and be able to open up the project and run it from there.
 
+## Key Commands
+
+You can toggle and swap between several different features. The key commands and corresponding actions are as follows:
+
+- Arrow keys = move Pacman
+- "W" = Toggle rendering the 3D maze walls on and off
+- "T" = Render a plain BasicGraphics sphere instead of a sphere with the maze texture
+- "M" = Go back to rendering the sphere with the maze texture
+- "+" = zoom in
+- "-" = zoom out
+- "J" = Toggle whether or not the joint positions affect the pacman mesh (skinning) 
+
 ## Design Decisions
 TODO: fill this in
 

@@ -253,7 +253,7 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         }
 
         rotation = rotate(mat4(1.0), rotationAngle * dir.length(), rotationAxis);
-        if (!pacmanColliding(rotation)) {
+        if (!pacmanColliding(rotation * mazeFrame)) {
             mazeFrame = rotation * mazeFrame;
             mazeY = vec3(rotation * vec4(mazeY, 0));
         }
@@ -275,42 +275,22 @@ bool App::pacmanColliding(mat4 rotation) {
 	vec4 pos = rotation * vec4(0, 0, MAZE_RADIUS, 1.0);
 	vec2 texCoord = maze->getTexturePosition(pos);
     
-    // TODO: may need to account for pac radius (probs just gonna affect center point now)
-    // TODO: may also need to set rotation so that pacman doesn't get trapped
-    
-    //cout << "Collision tex coord: " << to_string(texCoord) << endl;
-    
     int width = maze->imageWidth;
     int height = maze->imageHeight;
     int numChannels = maze->imageChannels;
-    
-//    cout << "Image width: " << width << endl;
-//    cout << "Image height: " << height << endl;
-//    cout << "Num channels: " << numChannels << endl;
-    
+
     // Convert texture coords from 0-1 to row and column
-    int row = texCoord.x * width;
-    int column = texCoord.y * height;
-    
+    float column = texCoord.x * width;
+    float row = texCoord.y * height;
+
     // Row-major order
-    int index = (numChannels * width * row) + (numChannels * column);
+    int index = numChannels * ((height * column) + row);
     // Column-major version below
     //int index = (numChannels * height * column) + (numChannels * row);
-    
-    if (maze->_image == nullptr) {
-        cout << "hi2" << endl;
-    }
-    else {
-        cout << (int)(maze->_image[index]) << endl;
-    }
-    
+
     int R = (int) maze->_image[index];
     int G = (int) maze->_image[index + 1];
     int B = (int) maze->_image[index + 2];
-    
-//    cout << "R: " << R << endl;
-//    cout << "G: " << G << endl;
-//    cout << "B: " << B << endl;
 
 	return R == 0 && G == 0 && B == 0;
 };
