@@ -18,8 +18,8 @@ namespace pacsphere {
     }
 
     void Sphere::setupSphereMesh() {
-        const int STACKS = 500;
-        const int SLICES = 500;
+        const int STACKS = 250;
+        const int SLICES = 350;
         vector<AnimatedMesh::Vertex> cpuVertexArray = vector<AnimatedMesh::Vertex>();
         vector<int> cpuIndexArray = vector<int>();
 
@@ -138,18 +138,16 @@ namespace pacsphere {
     vec2 Sphere::getTexturePosition(vec3 vertexPos) {
         
         for(PositionTexPair pair : vertexMap) {
-            
+
             // Determine if x, y, and z are within 0.01 of the given vertex position
-            vec3 match = glm::epsilonEqual(vertexPos, pair.position, 0.01f);
+            vec3 match = glm::epsilonEqual(vertexPos, pair.position, 1.0f);
             
-            if (match.x && match.y && match.z){
-                
-                cout << "textcoord: " << to_string(pair.texCoord) << endl;
-                cout << "X matches: " << match.x << endl << "Y Matches: " << match.y << endl << "Z matches: " << match.z << endl;
-                
+            if (match.x && match.y && match.z) {
                 return pair.texCoord;
             }
         }
+
+        return vec2(0.0);
     }
 
     void Sphere::draw(GLSLProgram &shader, const glm::mat4 &modelMatrix) {
