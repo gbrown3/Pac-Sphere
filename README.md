@@ -2,6 +2,8 @@
 
 Gabe Brown, Juan David Garrido
 
+![Screenshot](pacsphere-normal.gif)
+
 ## Getting Started
 
 Clone and generate the project files:
