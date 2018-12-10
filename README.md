@@ -35,6 +35,8 @@ To create Pac-Sphere there were a lot of different decisions to be made due to t
 
 When implementing the maze we decided that there we would be no real need to implement a fragment shader due to the walls being black and because all they really do is demark the limits for Pacman's and the ghosts' movements. 
 
+We decided to use the modeling software Blender to make the ghost models, because we thought it would be too challenging to try and make them programmatically and Blender is free to use. We also decided to import the ghost models as Collada files (.dae) rather than Wavefront files (.obj), because Wavefront files didn't include enough information to allow us to assign different colors to different parts of the mesh, thereby preventing us from making the eyes white and the rest of the body a different color.
+
 ## Project Structure
 
 ### App.h and App.cpp
