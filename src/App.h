@@ -67,7 +67,6 @@ private:
 	static constexpr float PAC_RADIUS = 1.0f;
     static constexpr float ZOOM_INCREMENT = 2.0f;
 
-	double _lastTime;
 	double _curFrameTime;
     
     std::unique_ptr<pacsphere::Sphere> maze;
@@ -109,10 +108,7 @@ private:
     basicgraphics::GLSLProgram _mazeShader;
     basicgraphics::GLSLProgram _ghostShader;
 
-	void initializeText();
-	void drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth);
 	struct FONScontext* fs;
-    basicgraphics::GLSLProgram _textShader;
 };
 
 

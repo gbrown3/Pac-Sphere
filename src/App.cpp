@@ -18,7 +18,6 @@ using namespace pacsphere;
 
 App::App(int argc, char** argv) : VRApp(argc, argv)
 {
-	_lastTime = 0.0;
     _curFrameTime = 0.0;
     
     dir = vec3(0.0);
@@ -47,7 +46,6 @@ void App::onAnalogChange(const VRAnalogEvent &event) {
     // new value with event->getValue().
     
 	if (event.getName() == "FrameStart") {
-		_lastTime = _curFrameTime;
 		_curFrameTime = event.getValue();
 	}
 
