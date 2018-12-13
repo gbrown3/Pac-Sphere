@@ -44,4 +44,8 @@ We decided to use the modeling software Blender to make the ghost models, becaus
 ### App.h and App.cpp
 These files contain the outermost structure of the app, based on the example in the MinVR [README](https://github.com/mac-comp465-f18/MinVR/blob/master/README.md). This is where the Pac-man and Maze objects are instantiated, the scene and camera are established, meshes get drawn, and user interaction is handled.
 
-TODO: add more to this
+### Sphere.h and Sphere.cpp
+Creates the sphere where all the meshes sit. This sphere is based on the Earthquakes HW where we learned how to tesselate a sphere. Our Sphere implementation adds to the Earthquake Sphere by accessing and holding on to the texture image bytes, as well as handling and updating joints. 
+
+### Pacman.h and Pacman.cpp
+Pacman is created based on our Sphere implementation. It consists of a Sphere with three joints. Two for the mouth and one for the center of Pacman.
