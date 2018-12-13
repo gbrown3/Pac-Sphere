@@ -20,8 +20,9 @@ namespace pacsphere {
     typedef std::shared_ptr<class AnimatedMesh> AnimatedMeshRef;
     
     /**
-     * Similar to a basicgraphics Mesh, but allows access to vertex data and includes a series of joints
-     *
+     * Similar to a basicgraphics Mesh, but includes a list of joints
+     * and groups three joint weights with each vertex to use for
+     * skinning
      */
     class AnimatedMesh : public std::enable_shared_from_this<AnimatedMesh>{
         
@@ -62,12 +63,6 @@ namespace pacsphere {
         void updateIndexData(int totalNumIndices, int startByteOffset, int indexByteSize, int* index);
         
         
-        
-        
-        // BELOW: public methods unique to AnimatedMesh
-        
-        std::vector<pacsphere::AnimatedMesh::Vertex> getVertexData() { return _vertexData; };
-        
     private:
         
         // Variables from original mesh class
@@ -85,9 +80,6 @@ namespace pacsphere {
         glm::vec4 _materialColor;
         
         std::vector<std::shared_ptr<basicgraphics::Texture> > _textures;
-        
-        // Unique to AnimatedMesh
-        std::vector<pacsphere::AnimatedMesh::Vertex> _vertexData;
     };
 }
 

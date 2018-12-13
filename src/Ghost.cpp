@@ -37,15 +37,21 @@ namespace pacsphere {
                 break;
         }
         
-        filePath += ".dae"; // switched to collada file, so we can assign seperate colors to each mesh in the model
+        // switched to collada file, so we can assign seperate colors to each mesh in the model
+        filePath += ".dae";
         
         _meshColors = vector<vec4>();
-        _meshColors.push_back(vec4(1, 1, 1, 1));    // either the first mesh or the third mesh (maybe both?) are the eyes of the ghost, so set those to white
-        _meshColors.push_back(_ghostColor);         // second mesh is body of ghost
-        _meshColors.push_back(vec4(1, 1, 1, 1));
+        _meshColors.push_back(vec4(1, 1, 1, 1));    // Eye #1 -> set to white
+        _meshColors.push_back(_ghostColor);         // Body of ghost, color depends on which ghost it is
+        _meshColors.push_back(vec4(1, 1, 1, 1));    // Eye #2 -> set to white
         
-        // Note: models should be in resources folder
+        // Models should be in resources folder
         _model = getModelInstance(filePath);
+    }
+    
+    Ghost::~Ghost() {
+        
+        _model->~AnimatedModel();
     }
 
     shared_ptr<AnimatedModel> Ghost::getModelInstance(string fileName){

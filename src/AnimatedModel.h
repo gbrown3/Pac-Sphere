@@ -44,6 +44,11 @@ namespace pacsphere {
         bool _firstUpdate;
     };
     
+    
+    /**
+     * Essentially the same as a BasicGraphics model, but with the option to set different
+     * material colors for each mesh in the model.
+     */
     class AnimatedModel : public std::enable_shared_from_this<AnimatedModel>
     {
     public:

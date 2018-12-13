@@ -15,8 +15,6 @@ namespace pacsphere {
     
     AnimatedMesh::AnimatedMesh(vector<shared_ptr<Texture> > textures, GLenum primitiveType, GLenum usage, int allocateVertexByteSize, int allocateIndexByteSize, int vertexOffset, const vector<AnimatedMesh::Vertex> &data, int numIndices, int indexByteSize, int* index) {
         
-        _vertexData = data; // Store for easier access
-        
         _textures = textures;
         
         _materialColor = glm::vec4(1.0);

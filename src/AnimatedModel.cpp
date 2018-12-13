@@ -261,6 +261,7 @@ namespace pacsphere {
         }
     }
     
+    
     void AnimatedModel::setMaterialColors(const std::vector<glm::vec4> &colors) {
         
         const int numMeshes = _meshes.size();
