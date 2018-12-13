@@ -28,7 +28,7 @@ namespace pacsphere {
         if (_texturePath != "") {
             shared_ptr<Texture> texture = Texture::create2DTextureFromFile(_texturePath);
 
-            //int width, height, channels;
+            // Gets the bytes for the texture image in order to be used in our collision logic
             _image = SOIL_load_image(_texturePath.c_str(), &imageWidth, &imageHeight, &imageChannels, SOIL_LOAD_AUTO);
 
             if (texture) {
@@ -58,6 +58,7 @@ namespace pacsphere {
                 xCoord = _radius*cos(angle)*topStackLength;
                 zCoord = _radius*sin(angle)*topStackLength;
                 vec3 vertexPos = vec3(xCoord, topStack, zCoord);
+
                 // Add in joint weights, if any were passed in (otherwise they can just be 0, doesn't matter)
                 vec3 weights = vec3(0);
 

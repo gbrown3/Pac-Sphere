@@ -253,6 +253,8 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
         }
 
         rotation = rotate(mat4(1.0), rotationAngle * dir.length(), rotationAxis);
+
+        // If pacman is not colliding then keep rotating the sphere
         if (!pacmanColliding(rotation * mazeFrame)) {
             mazeFrame = rotation * mazeFrame;
             mazeY = vec3(rotation * vec4(mazeY, 0));
@@ -268,15 +270,21 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
  * Given the current rotation of the maze, returns true if pacman is in contact with one of the walls
  */
 bool App::pacmanColliding(mat4 rotation) {
-    
-    
-    return false;
-    
+    // Because collision is not working properly yet, we always return false to avoid problems in the program
+//    return false;
+
+    // This is our attempt to calculate collision
+
+    // Get the position where pacman will be in the next frame
 	vec4 pos = rotation * vec4(0, 0, MAZE_RADIUS, 1.0);
+
+	// Get the texture coordinate at that position
 	vec2 texCoord = maze->getTexturePosition(pos);
-    
+
     int width = maze->imageWidth;
     int height = maze->imageHeight;
+
+    // Number of channels in one pixel. (r,g,b) == 3. (r,g,b,a) == 4
     int numChannels = maze->imageChannels;
 
     // Convert texture coords from 0-1 to row and column
@@ -284,7 +292,7 @@ bool App::pacmanColliding(mat4 rotation) {
     float row = texCoord.y * height;
 
     // Row-major order
-    int index = numChannels * ((height * column) + row);
+    int index = numChannels * ((width * row) + column);
     // Column-major version below
     //int index = (numChannels * height * column) + (numChannels * row);
 
@@ -292,6 +300,7 @@ bool App::pacmanColliding(mat4 rotation) {
     int G = (int) maze->_image[index + 1];
     int B = (int) maze->_image[index + 2];
 
+    // If the color of the pixel is black then pacman is colliding
 	return R == 0 && G == 0 && B == 0;
 };
 
@@ -369,11 +378,6 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     
     _pacShader.setUniform("useJoints", useJointAnimations);
     
-//    cout << "centerJointRotation: " << to_string(joints[0]->_rotation) << endl;
-//    cout << "rightJointRotation: " << to_string(joints[1]->_rotation) << endl;
-//    cout << "leftJointRotation: " << to_string(joints[2]->_rotation) << endl;
-//
-    
     pacman->draw(_pacShader, pacFrame);
     _shader.use();
     pacman->_mesh->drawJoints(_shader, pacFrame);
@@ -401,31 +405,6 @@ void App::onRenderGraphicsScene(const VRGraphicsState &renderState) {
     clyde->draw(_ghostShader, mazeFrame * clydeFrame);
 }
 
-void App::drawText(const std::string text, float xPos, float yPos, GLfloat windowHeight, GLfloat windowWidth) {
-	//float lh = 0;
-	//fonsVertMetrics(fs, NULL, NULL, &lh);
-	//double width = fonsTextBounds(fs, text.c_str(), NULL, NULL) + 40;
-	//double height = lh + 40;
-
-	_textShader.use();
-	_textShader.setUniform("projection_mat", glm::ortho(0.f, windowWidth, windowHeight, 0.f, -1.f, 1.f));
-	_textShader.setUniform("view_mat", glm::mat4(1.0));
-	_textShader.setUniform("model_mat", glm::mat4(1.0));
-	_textShader.setUniform("lambertian_texture", 0);
-
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	fonsDrawText(fs, xPos, yPos, text.c_str(), NULL);
-
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	_shader.use();
-
-}
-
 void App::reloadShaders()
 {
 	_shader.compileShader("texture.vert", GLSLShader::VERTEX);
@@ -444,31 +423,4 @@ void App::reloadShaders()
     _ghostShader.compileShader("texture.vert", GLSLShader::VERTEX);
     _ghostShader.compileShader("shaders/ghost.frag", GLSLShader::FRAGMENT);
     _ghostShader.link();
-}
-
-void App::initializeText() {
-	int fontNormal = FONS_INVALID;
-	fs = nullptr;
-
-	fs = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT);
-	if (fs == NULL) {
-		assert(false);//Could not create stash
-	}
-
-	fontNormal = fonsAddFont(fs, "sans", "DroidSansMono.ttf");
-	if (fontNormal == FONS_INVALID) {
-		assert(false);// Could not add font normal.
-	}
-
-	unsigned int black = glfonsRGBA(0, 0, 0, 255);
-
-	fonsClearState(fs);
-	fonsSetSize(fs, 20);
-	fonsSetFont(fs, fontNormal);
-	fonsSetColor(fs, black);
-	fonsSetAlign(fs, FONS_ALIGN_LEFT | FONS_ALIGN_TOP);
-
-	_textShader.compileShader("textRendering.vert", GLSLShader::VERTEX);
-	_textShader.compileShader("textRendering.frag", GLSLShader::FRAGMENT);
-	_textShader.link();
 }
