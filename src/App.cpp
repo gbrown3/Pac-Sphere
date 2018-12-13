@@ -268,6 +268,10 @@ void App::onRenderGraphicsContext(const VRGraphicsState &renderState) {
  * Given the current rotation of the maze, returns true if pacman is in contact with one of the walls
  */
 bool App::pacmanColliding(mat4 rotation) {
+    
+    
+    return false;
+    
 	vec4 pos = rotation * vec4(0, 0, MAZE_RADIUS, 1.0);
 	vec2 texCoord = maze->getTexturePosition(pos);
     

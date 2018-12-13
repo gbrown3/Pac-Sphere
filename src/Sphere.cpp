@@ -73,11 +73,17 @@ namespace pacsphere {
                     float leftWeight = 1 - distance(leftJointPos, vertexPos)/(_radius * 2);
 
                     // Average out weights so they all add to 1
-                    float totalWeight = centerWeight + rightWeight + leftWeight;
-
-                    centerWeight = centerWeight/totalWeight;
-                    rightWeight = rightWeight/totalWeight;
-                    leftWeight = leftWeight/totalWeight;
+//                    float totalWeight = centerWeight + rightWeight + leftWeight;
+//
+//                    centerWeight = centerWeight/totalWeight;
+//                    rightWeight = rightWeight/totalWeight;
+//                    leftWeight = leftWeight/totalWeight;
+                    if (vertexPos.x < 0) {
+                        rightWeight = 0;
+                    }
+                    else {
+                        leftWeight = 0;
+                    }
 
                     weights = vec3(centerWeight, rightWeight, leftWeight);
                 }
@@ -105,11 +111,18 @@ namespace pacsphere {
                     float leftWeight = 1 - distance(leftJointPos, vertexPos)/(_radius * 2);
 
                     // Average out weights so they all add to 1
-                    float totalWeight = centerWeight + rightWeight + leftWeight;
-
-                    centerWeight = centerWeight/totalWeight;
-                    rightWeight = rightWeight/totalWeight;
-                    leftWeight = leftWeight/totalWeight;
+//                    float totalWeight = centerWeight + rightWeight + leftWeight;
+//
+//                    centerWeight = centerWeight/totalWeight;
+//                    rightWeight = rightWeight/totalWeight;
+//                    leftWeight = leftWeight/totalWeight;
+                    
+                    if (vertexPos.x < 0) {
+                        rightWeight = 0;
+                    }
+                    else {
+                        leftWeight = 0;
+                    }
 
                     weights = vec3(centerWeight, rightWeight, leftWeight);
                 }

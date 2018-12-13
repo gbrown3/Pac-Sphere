@@ -17,6 +17,9 @@
 //
 //void main(void)
 //{
+//
+//      UNCOMMENT FOR SEA URCHIN
+//
 //    // Ultimate vertex position should be affected by a combination of how each joint has moved
 //    vec4 centerJointImpact = vertex_joint_weights[0] * (centerJointRotation * vec4(vertex_position, 1));
 //    vec4 rightJointImpact = vertex_joint_weights[1] * (rightJointRotation * vec4(vertex_position, 1));
@@ -56,9 +59,24 @@ void main () {
     
     // Ultimate vertex position should be affected by a combination of how each joint has moved
     
-    mat4 jointRotation =    vertex_joint_weights[0] * centerJointRotation +
-                            vertex_joint_weights[1] * rightJointRotation  +
+    // Disregard center, assume either right or left weight is 0
+    // mat4[col][row]
+    
+    float originalPosWeight = 1.0 - (vertex_joint_weights[1] + vertex_joint_weights[2]);
+//    mat4 weightedOriginalTransform = mat4(1.0);
+//
+//    weightedOriginalTransform[3][0] = vertex_position[0];
+//    weightedOriginalTransform[3][1] = vertex_position[1];
+//    weightedOriginalTransform[3][2] = vertex_position[2];
+//
+//    weightedOriginalTransform *= originalPosWeight;
+
+    mat4 jointRotation =    vertex_joint_weights[1] * rightJointRotation    +
                             vertex_joint_weights[2] * leftJointRotation;
+    
+//    mat4 jointRotation =    vertex_joint_weights[0] * centerJointRotation +
+//                            vertex_joint_weights[1] * rightJointRotation  +
+//                            vertex_joint_weights[2] * leftJointRotation;
     
     vec4 newModelPosition = jointRotation * vec4(vertex_position, 1.0);
     vec3 newVertexNormal = vec3(jointRotation * vec4(vertex_normal, 1.0));
