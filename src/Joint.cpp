@@ -14,7 +14,7 @@ using namespace glm;
 
 namespace pacsphere {
     
-    // Root joint
+    // Root joint constructor (actually used)
     Joint::Joint(vec3 localPosition, vec4 testColor) {
         
         _localPosition = localPosition;
@@ -22,7 +22,7 @@ namespace pacsphere {
         _jointSphere.reset(new Sphere(vec3(0, 0, 0), SPHERE_RADIUS, testColor));
     }
     
-    // Normal Joint
+    // Normal Joint constructor (not used for now)
     Joint::Joint(std::shared_ptr<Joint> parentJoint, glm::vec3 localPosition) {
         
         _parentJoint = parentJoint;
@@ -42,8 +42,6 @@ namespace pacsphere {
     
     
     void Joint::draw(GLSLProgram &shader, const mat4 &modelMatrix) {
-        
-        //cout << "Joint pos at draw time: " << to_string(_localPosition) << endl;
         
         mat4 translateToLocalPos = glm::translate(mat4(1), _localPosition);
         _jointSphere->draw(shader, modelMatrix * translateToLocalPos);

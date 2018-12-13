@@ -26,16 +26,31 @@ namespace pacsphere {
         
         glm::vec3 _localPosition;
         
-        // Constuctor for root joint, initialized with coordinate in model space (not world) and color to make sphere representing its pos
+        /*!
+         * Constuctor for root joint, initialized with coordinate in model space
+         * and color to use for sphere representing its position
+         */
         Joint(glm::vec3 localPosition, glm::vec4 testColor);
         
-        // Constructor for all other joints
+        
+        /*!
+         * Constructor for all other joints. Unfortunately, this never gets used
+         * because when we tried to implement it we always got memory leaks,
+         * but I'll leave it here in case we decide to come back to it in the future.
+         * For now, there are no relationships between joints
+         */
         Joint(std::shared_ptr<Joint> parentJoint, glm::vec3 localPosition);
         
-        // Adds joint to list of children
+        
+        /*!
+         * Add a child joint to this joint
+         */
         void addChild(std::shared_ptr<Joint> childJoint);
         
-        // Draws basicgraphics sphere to show precisely where the joint is
+        
+        /*!
+         * Draw a BasicGraphics sphere to show precisely where this joint is
+         */
         void draw(basicgraphics::GLSLProgram &shader, const glm::mat4 &modelMatrix);
         
         // The joint's rotation. Should be updated when joint rotates in an animation, and is used for shader vertex skinning calculations
