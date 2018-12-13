@@ -12,12 +12,14 @@ using namespace std;
 using namespace basicgraphics;
 
 namespace pacsphere {
+    
     Sphere::Sphere(const glm::vec3 &position, const float radius, const glm::vec4 &color, const string texture, std::vector<std::shared_ptr<Joint>> joints) :
     _position(position), _radius(radius), _color(color), _texturePath(texture), _joints(joints) {
         setupSphereMesh();
     }
 
     void Sphere::setupSphereMesh() {
+        
         const int STACKS = 250;
         const int SLICES = 350;
         vector<AnimatedMesh::Vertex> cpuVertexArray = vector<AnimatedMesh::Vertex>();
@@ -73,12 +75,23 @@ namespace pacsphere {
                     float rightWeight = 1 - distance(rightJointPos, vertexPos)/(_radius * 2);
                     float leftWeight = 1 - distance(leftJointPos, vertexPos)/(_radius * 2);
 
+                    
+                    // We couldn't quite figure out the right way to assign weights, so below
+                    // is a record of one of our other attempts.
+                    
                     // Average out weights so they all add to 1
 //                    float totalWeight = centerWeight + rightWeight + leftWeight;
 //
 //                    centerWeight = centerWeight/totalWeight;
 //                    rightWeight = rightWeight/totalWeight;
 //                    leftWeight = leftWeight/totalWeight;
+                    
+                    
+                    // Since pacman is centered at the origin in model space,
+                    // the joint for each lip is at (0, PAC_RADIUS, 0) and rotates around
+                    // the z-axis, vertices on the left side of pacman should only be impacted by
+                    // the left lip joint, and vertices on the right side of pacman should only be
+                    // impacted by the right joint, thus the other side should be 0
                     if (vertexPos.x < 0) {
                         rightWeight = 0;
                     }
@@ -111,6 +124,9 @@ namespace pacsphere {
                     float rightWeight = 1 - distance(rightJointPos, vertexPos)/(_radius * 2);
                     float leftWeight = 1 - distance(leftJointPos, vertexPos)/(_radius * 2);
 
+                    // Weight logic is same as for top vertex. One early attempt for posterity,
+                    // and our latest attempt.
+                    
                     // Average out weights so they all add to 1
 //                    float totalWeight = centerWeight + rightWeight + leftWeight;
 //
@@ -153,8 +169,8 @@ namespace pacsphere {
         
         for(PositionTexPair pair : vertexMap) {
 
-            // Determine if x, y, and z are within 0.01 of the given vertex position
-            vec3 match = glm::epsilonEqual(vertexPos, pair.position, 1.0f);
+            // Determine if x, y, and z are reasonably close to the given vertex position
+            vec3 match = glm::epsilonEqual(vertexPos, pair.position, 0.01f);
             
             if (match.x && match.y && match.z) {
                 return pair.texCoord;
